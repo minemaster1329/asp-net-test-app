@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import {Link} from "react-router-dom";
 
 
 export default class Patients extends Component {
@@ -51,6 +52,7 @@ export default class Patients extends Component {
                         <th>Middle Name</th>
                         <th>Gender</th>
                         <th>Email</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -62,6 +64,9 @@ export default class Patients extends Component {
                         <td>{patient.middlename}</td>
                         <td>{this.renderGender(patient.gender)}</td>
                         <td>{patient.email}</td>
+                        <td>
+                            <Link to={{pathname: '/patientdetails', search: `id=${patient.pesel}`}}>See details</Link>
+                        </td>
                     </tr>
                 )}
                 </tbody>

@@ -7,6 +7,8 @@ import { Counter } from './components/Counter';
 import './custom.css'
 import Patients from "./components/PatientComponents/Patients";
 import PatientDetails from "./components/PatientComponents/PatientDetails";
+import AddNewPatient from "./components/PatientComponents/AddNewPatient";
+import {Switch} from "react-router-dom";
 
 export default class App extends Component {
   static displayName = App.name;
@@ -17,9 +19,12 @@ export default class App extends Component {
         <Route exact path='/' component={Home} />
         <Route path='/counter' component={Counter} />
         <Route path='/patients' component={Patients} />
-        <Route path='/patientdetails' component={Patients}>
-            <Route path='/:id' component={PatientDetails}/>
+        <Route path='/patientdetails'>
+            <Switch>
+                <Route path='/:id' component={PatientDetails}/>
+            </Switch>
         </Route>
+        <Route path='/addnewpatient' component={AddNewPatient}/>
       </Layout>
     );
   }

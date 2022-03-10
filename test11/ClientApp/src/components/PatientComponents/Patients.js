@@ -36,7 +36,11 @@ export default class Patients extends Component {
         }
         else {
             return (
-                Patients.renderPatientsTable(this.state.patients)
+                <div>
+                    <h1>Patients</h1>
+                    {Patients.renderPatientsTable(this.state.patients)}   
+                    <Link to='/addnewpatient'>Add new patient to system</Link>
+                </div>
             )   
         }
     }
@@ -88,7 +92,7 @@ export default class Patients extends Component {
     }
     
     async populatePatientsData(){
-        const result = await fetch('/api/Patients/GetAllPatients'.toLowerCase()).then((response) => {
+        await fetch('/api/Patients/GetAllPatients'.toLowerCase()).then((response) => {
             if (response.ok){
                 return response.json();
             }

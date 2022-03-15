@@ -20,9 +20,7 @@ export default class App extends Component {
         <Route path='/counter' component={Counter} />
         <Route path='/patients' component={Patients} />
         <Route path='/patientdetails'>
-            <Switch>
-                <Route path='/:id' component={PatientDetails}/>
-            </Switch>
+            <Route path='/:id' component={PatientDetails}/>
         </Route>
         <Route path='/addnewpatient' component={AddNewPatient}/>
       </Layout>

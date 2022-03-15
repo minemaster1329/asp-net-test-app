@@ -19,7 +19,6 @@ export default class AddNewPatient extends Component{
     }
     
     handleFormSubmit(event){
-        alert(this.state.newPatientName);
         event.preventDefault();
     }
     

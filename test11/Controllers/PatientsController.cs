@@ -33,6 +33,10 @@ public class PatientsController : ControllerBase
 
         return NotFound();
     }
-    
-    
+
+    [HttpGet("{id}")]
+    public bool CheckIfIdExists(string? id)
+    {
+        return _context.Patients.Any((patient => patient.Pesel.Equals(id)));
+    }
 }

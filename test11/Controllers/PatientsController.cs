@@ -39,4 +39,27 @@ public class PatientsController : ControllerBase
     {
         return _context.Patients.Any((patient => patient.Pesel.Equals(id)));
     }
+    
+    [HttpPost]
+    public IActionResult AddNewPatient(Patient? pt)
+    {
+        if (pt is null)
+        {
+            return BadRequest("Patient supplied cannot be null");
+        }
+
+        if (_context.Patients.Any(p => pt.Pesel.Equals(p.Pesel)))
+            return BadRequest("Patient with specified id already exist");
+
+        try
+        {
+            _context.Patients.Add(pt);
+            _context.SaveChanges();
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+        }
+    }
 }

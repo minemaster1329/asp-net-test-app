@@ -6,8 +6,7 @@ namespace test11.Models;
 public class Patient
 {
     [Key]
-    [MinLength(11)]
-    [MaxLength(11)]
+    [Pesel]
     public string Pesel { get; set; }
 
     [Required]

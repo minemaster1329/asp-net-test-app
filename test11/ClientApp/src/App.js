@@ -3,6 +3,7 @@ import { Route } from 'react-router';
 import { Layout } from './components/Layout';
 import { Home } from './components/Home';
 import { Counter } from './components/Counter';
+import NotFound from './components/NotFound'
 
 import './custom.css'
 import Patients from "./components/PatientComponents/Patients";
@@ -16,13 +17,16 @@ export default class App extends Component {
   render () {
     return (
       <Layout>
-        <Route exact path='/' component={Home} />
-        <Route path='/counter' component={Counter} />
-        <Route path='/patients' component={Patients} />
-        <Route path='/patientdetails'>
-            <Route path='/:id' component={PatientDetails}/>
-        </Route>
-        <Route path='/addnewpatient' component={AddNewPatient}/>
+          <Switch>
+              <Route exact path='/' component={Home} />
+              <Route path='/counter' component={Counter} />
+              <Route path='/patients' component={Patients} />
+              <Route path='/patientdetails'>
+                  <Route path='/:id' component={PatientDetails}/>
+              </Route>
+              <Route path='/addnewpatient' component={AddNewPatient}/>
+              <Route component={NotFound}/>
+          </Switch>
       </Layout>
     );
   }

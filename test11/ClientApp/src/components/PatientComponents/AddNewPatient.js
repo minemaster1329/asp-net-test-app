@@ -87,9 +87,9 @@ export default class AddNewPatient extends Component{
                             <td>Patient's gender:</td>
                             <td>
                                 <select name='newPatientGender' value={this.state.newPatientGender} onChange={this.handleChangeEvent}>
-                                    <option value='0'>0</option>
-                                    <option value='1'>1</option>
-                                    <option value='2'>2</option>
+                                    <option value='0'>Male</option>
+                                    <option value='1'>Female</option>
+                                    <option value='2'>Unknown</option>
                                 </select>
                             </td>
                         </tr>

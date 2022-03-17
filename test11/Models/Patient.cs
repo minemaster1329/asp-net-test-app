@@ -19,11 +19,11 @@ public class Patient
     [MaxLength(50)]
     public string Surname { get; set; } = "";
 
-    [RegularExpression(@"(^$)|(^\p{Lu}\p{Ll}+$)")]
+    [RegularExpression(@"^\p{Lu}\p{Ll}+$")]
     [MaxLength(50)]
     public string MiddleName { get; set; } = "";
 
-    [RegularExpression(@"(^$)|([A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64})")]
+    [RegularExpression(@"[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}")]
     [MaxLength(50)]
     public string Email { get; set; } = "";
     [Required]

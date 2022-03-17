@@ -5,7 +5,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+});
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
@@ -13,7 +16,19 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
         $"Server=127.0.0.1;Port=5432;Database={builder.Configuration["test11:Database"]};User Id={builder.Configuration["test11:DatabaseUser"]};Password={builder.Configuration["test11:DatabasePassword"]};");
 });
 
+builder.Services.AddCors((options) =>
+{
+    options.AddPolicy("AllowCorsPolicy", builder =>
+    {
+        builder.WithOrigins("http://localhost:7228")
+            .AllowAnyHeader()
+            .AllowAnyHeader();
+    });
+});
+
 var app = builder.Build();
+
+app.UseCors("AllowCorsPolicy");
 
 using (var scope = app.Services.CreateScope())
 {

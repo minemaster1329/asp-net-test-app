@@ -1,6 +1,8 @@
 ﻿import {Component} from "react";
 
 import './patientsStyles.css'
+import {Link} from "react-router-dom";
+import {Form, FormGroup, Input, Label} from "reactstrap";
 
 export default class AddNewPatient extends Component{
     constructor(props){
@@ -16,10 +18,54 @@ export default class AddNewPatient extends Component{
         
         this.handleChangeEvent = this.handleChangeEvent.bind(this);
         this.handleFormSubmit = this.handleFormSubmit.bind(this);
+        this.handleClearForm = this.handleClearForm.bind(this);
     }
     
     handleFormSubmit(event){
         event.preventDefault();
+        let newPatient = {
+            Pesel: this.state.newPatientPesel,
+            Name: this.state.newPatientName,
+            Surname: this.state.newPatientSurname,
+            MiddleName: this.state.newPatientMiddlename,
+            Email: this.state.newPatientEmail,
+            Gender: parseInt(this.state.newPatientGender)
+        }
+        
+        fetch('api/patients/addnewpatient', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(newPatient)
+        }).then(response => {
+            if (response.ok){
+                alert("Patient added successfully.")
+            }
+            else {
+                response.text().then(text=> {
+                    console.error(text);
+                })
+                // response.json().then((json => {
+                //    alert(json['title']);
+                //    console.error(json);
+                // }))   
+            }
+        }).catch((error) => {
+            if (error instanceof String){
+                alert(error);
+            }
+        })
+    }
+    
+    handleClearForm(event){
+        event.preventDefault();
+        this.setState({
+            newPatientPesel: "",
+            newPatientName: "",
+            newPatientSurname: "",
+            newPatientMiddlename: "",
+            newPatientGender: 0,
+            newPatientEmail: ""
+        });
     }
     
     handleChangeEvent(event){
@@ -95,8 +141,9 @@ export default class AddNewPatient extends Component{
                         </tr>
                         </tbody>
                     </table>
-                    <p><input type='submit' value='Submit'/><input type='reset' value='Clear'/></p>
+                    <p><input type='submit' value='Submit'/><input type='reset' value='Clear' onClick={this.handleClearForm}/></p>
                 </form>
+                <Link to='/patients'>Back to patients table</Link>
             </div>
         )
     }

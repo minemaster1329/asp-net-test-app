@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "react-confirm-alert": "^2.8.0"
+  }
+}

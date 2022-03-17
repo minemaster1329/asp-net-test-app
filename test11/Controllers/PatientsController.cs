@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using test11.Models;
 
@@ -41,25 +42,37 @@ public class PatientsController : ControllerBase
     }
     
     [HttpPost]
-    public IActionResult AddNewPatient(Patient? pt)
+    [Consumes("application/json")]
+    public IActionResult AddNewPatient([FromBody] Patient pt)
     {
-        if (pt is null)
-        {
-            return BadRequest("Patient supplied cannot be null");
-        }
-
         if (_context.Patients.Any(p => pt.Pesel.Equals(p.Pesel)))
+        {
+            Debug.WriteLine($"Patient with id {pt.Pesel} already exists in database");
             return BadRequest("Patient with specified id already exist");
-
+        }
+            
         try
         {
             _context.Patients.Add(pt);
             _context.SaveChanges();
+            Debug.WriteLine($"Patient with {pt.Pesel} added successfully");
             return Ok();
         }
         catch (Exception e)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+            Debug.WriteLine($"Error when adding patient {pt.Pesel}: {e.Message}");
+            return BadRequest(e.Message);
         }
+    }
+
+    [HttpDelete("{id}")]
+    public IActionResult RemovePatientFromDatabase(string id)
+    {
+        Patient? pt = _context.Patients.Find(id);
+
+        if (pt is null) return NotFound($"Patient with id {id} not found");
+        _context.Patients.Remove(pt);
+        _context.SaveChanges();
+        return Ok("Patient removed successfully");
     }
 }

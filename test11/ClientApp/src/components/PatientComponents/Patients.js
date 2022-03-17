@@ -45,6 +45,24 @@ export default class Patients extends Component {
         }
     }
     
+    static handleDeletePatient(id){
+        let result = window.confirm(`are you sure you want to delete patient with id ${id} ?`);
+        
+        if (result === true){
+            fetch(`api/Patients/RemovePatientFromDatabase/${id}`.toLowerCase(), {
+                method: 'DELETE'
+            }).then(response => {
+                if (response.ok) {
+                    alert(`Successfully removed ${id}`)
+                    this.forceUpdate();
+                }
+                else {
+                    alert('Something went wrong');
+                }
+            })
+        }
+    }
+    
     static renderPatientsTable(patients) {
         return (
             <table className='table table-striped'>
@@ -70,6 +88,9 @@ export default class Patients extends Component {
                         <td>{patient.email}</td>
                         <td>
                             <Link to={{pathname: '/patientdetails', search: `id=${patient.pesel}`}}>See details</Link>
+                            &nbsp;
+                            &nbsp;
+                            <a className='link-primary' onClick={() => this.handleDeletePatient(patient.pesel)}>Delete</a>
                         </td>
                     </tr>
                 )}

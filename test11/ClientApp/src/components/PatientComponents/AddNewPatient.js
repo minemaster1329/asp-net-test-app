@@ -2,7 +2,29 @@
 
 import './patientsStyles.css'
 import {Link} from "react-router-dom";
-import {Form, FormGroup, Input, Label} from "reactstrap";
+
+const peselWeights = [1,3,7,9];
+const patternPesel = /^\d{11}$/;
+const patternNames = /^[A-Z][a-z]+$/;
+const patternEmail = /(^$)|(^[A-Z0-9a-z]+@[A-Za-z0-9]+\.[A-Za-z]{2,64}$)/; 
+
+function validatePatientPesel(pesel){
+    if (patternPesel.test(pesel)){
+        let checksum = parseInt(pesel.charAt(10));
+        let calcChecksum = 0;
+        
+        for (let i = 0; i < 10; i++){
+            calcChecksum += parseInt(pesel.charAt(i)) * peselWeights[i%4];
+        }
+        
+        calcChecksum %= 10;
+        
+        if (calcChecksum !== 0) calcChecksum = 10 - calcChecksum;
+        
+        return checksum === calcChecksum;
+    }
+    else return false;
+}
 
 export default class AddNewPatient extends Component{
     constructor(props){
@@ -13,47 +35,63 @@ export default class AddNewPatient extends Component{
             newPatientSurname: "",
             newPatientMiddlename: "",
             newPatientGender: 0,
-            newPatientEmail: ""
+            newPatientEmail: "",
+            newPatientPeselValid: false,
+            newPatientNameValid: false,
+            newPatientSurnameValid: false,
+            newPatientMiddlenameValid: true,
+            newPatientEmailValid: true,
         };
         
         this.handleChangeEvent = this.handleChangeEvent.bind(this);
         this.handleFormSubmit = this.handleFormSubmit.bind(this);
         this.handleClearForm = this.handleClearForm.bind(this);
+        this.validateField = this.validateField.bind(this);
     }
     
     handleFormSubmit(event){
         event.preventDefault();
-        let newPatient = {
-            Pesel: this.state.newPatientPesel,
-            Name: this.state.newPatientName,
-            Surname: this.state.newPatientSurname,
-            MiddleName: this.state.newPatientMiddlename,
-            Email: this.state.newPatientEmail,
-            Gender: parseInt(this.state.newPatientGender)
+        
+        if (this.state.newPatientNameValid &&
+            this.state.newPatientSurnameValid &&
+            this.state.newPatientMiddlenameValid &&
+            this.state.newPatientPeselValid &&
+            this.state.newPatientEmailValid
+        ) {
+            let newPatient = {
+                Pesel: this.state.newPatientPesel,
+                Name: this.state.newPatientName,
+                Surname: this.state.newPatientSurname,
+                MiddleName: this.state.newPatientMiddlename,
+                Email: this.state.newPatientEmail,
+                Gender: parseInt(this.state.newPatientGender)
+            }
+
+            fetch('api/patients/addnewpatient', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(newPatient)
+            }).then(response => {
+                if (response.ok){
+                    alert("Patient added successfully.")
+                }
+                else {
+                    response.text().then(text=> {
+                        console.error(text);
+                    })
+                    // response.json().then((json => {
+                    //    alert(json['title']);
+                    //    console.error(json);
+                    // }))   
+                }
+            }).catch((error) => {
+                if (error instanceof String){
+                    alert(error);
+                }
+            })
         }
         
-        fetch('api/patients/addnewpatient', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(newPatient)
-        }).then(response => {
-            if (response.ok){
-                alert("Patient added successfully.")
-            }
-            else {
-                response.text().then(text=> {
-                    console.error(text);
-                })
-                // response.json().then((json => {
-                //    alert(json['title']);
-                //    console.error(json);
-                // }))   
-            }
-        }).catch((error) => {
-            if (error instanceof String){
-                alert(error);
-            }
-        })
+        else alert("Some fields filled wrong!");
     }
     
     handleClearForm(event){
@@ -72,9 +110,36 @@ export default class AddNewPatient extends Component{
         let target = event.target;
         const value = target.value;
         const name = target.name;
+        this.validateField(name, value);
         this.setState({
             [name]: value
         });
+    }
+    
+    validateField(fieldName, fieldValue){
+        switch(fieldName){
+            case 'newPatientPesel':
+                this.setState({
+                    [fieldName+'Valid']: validatePatientPesel(fieldValue)
+                });
+                break;
+            case 'newPatientName':
+            case 'newPatientSurname':
+                this.setState({
+                    [fieldName+'Valid']: patternNames.test(fieldValue)
+                });
+                break;
+            case 'newPatientMiddlename':
+                this.setState({
+                    [fieldName+'Valid']: /^$/.test(fieldValue) || patternNames.test(fieldValue)
+                });
+                break;
+            case 'newPatientEmail':
+                this.setState({
+                    [fieldName+'Valid']: patternEmail.test(fieldValue)
+                });
+                break;
+        }
     }
     
     render(){
@@ -90,7 +155,9 @@ export default class AddNewPatient extends Component{
                                 <input type='text' name='newPatientPesel' maxLength='11' minLength='11' value={this.state.newPatientPesel} onChange={this.handleChangeEvent}/>
                             </td>
                             <td>
-                                <p className='text-invalid-input'>Invalid format</p>
+                                <p className='text-invalid-input'>
+                                    {this.state.newPatientPeselValid ? 'Valid' : 'Invalid'}
+                                </p>
                             </td>
                         </tr>
                         <tr>
@@ -99,7 +166,9 @@ export default class AddNewPatient extends Component{
                                 <input type='text' name='newPatientName' maxLength='35' minLength='2'  value={this.state.newPatientName} onChange={this.handleChangeEvent}/>
                             </td>
                             <td>
-                                <p className='text-invalid-input'>Invalid format</p>
+                                <p className='text-invalid-input'>
+                                    {this.state.newPatientNameValid ? 'Valid' : 'Invalid'}
+                                </p>
                             </td>
                         </tr>
                         <tr>
@@ -108,7 +177,9 @@ export default class AddNewPatient extends Component{
                                 <input type='text' name='newPatientSurname' maxLength='50' minLength='2'  value={this.state.newPatientSurname} onChange={this.handleChangeEvent}/>
                             </td>
                             <td>
-                                <p className='text-invalid-input'>Invalid format</p>
+                                <p className='text-invalid-input'>
+                                    {this.state.newPatientSurnameValid ? 'Valid' : 'Invalid'}
+                                </p>
                             </td>
                         </tr>
                         <tr>
@@ -117,7 +188,9 @@ export default class AddNewPatient extends Component{
                                 <input type='text' name='newPatientMiddlename' maxLength='50'  value={this.state.newPatientMiddlename} onChange={this.handleChangeEvent}/>
                             </td>
                             <td>
-                                <p className='text-invalid-input'>Invalid format</p>
+                                <p className='text-invalid-input'>
+                                    {this.state.newPatientMiddlenameValid ? 'Valid' : 'Invalid'}
+                                </p>
                             </td>
                         </tr>
                         <tr>
@@ -126,7 +199,9 @@ export default class AddNewPatient extends Component{
                                 <input type='text' name='newPatientEmail' maxLength='50'  value={this.state.newPatientEmail} onChange={this.handleChangeEvent}/>
                             </td>
                             <td>
-                                <p className='text-invalid-input'>Invalid format</p>
+                                <p className='text-invalid-input'>
+                                    {this.state.newPatientEmailValid ? 'Valid' : 'Invalid'}
+                                </p>
                             </td>
                         </tr>
                         <tr>

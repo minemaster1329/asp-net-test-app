@@ -74,15 +74,25 @@ export default class AddNewPatient extends Component{
             }).then(response => {
                 if (response.ok){
                     alert("Patient added successfully.")
+                    
+                    this.setState({
+                        newPatientPesel: "",
+                        newPatientName: "",
+                        newPatientSurname: "",
+                        newPatientMiddlename: "",
+                        newPatientGender: 0,
+                        newPatientEmail: "",
+                        newPatientPeselValid: false,
+                        newPatientNameValid: false,
+                        newPatientSurnameValid: false,
+                        newPatientMiddlenameValid: true,
+                        newPatientEmailValid: true,
+                    })
                 }
                 else {
                     response.text().then(text=> {
                         console.error(text);
-                    })
-                    // response.json().then((json => {
-                    //    alert(json['title']);
-                    //    console.error(json);
-                    // }))   
+                    })  
                 }
             }).catch((error) => {
                 if (error instanceof String){
@@ -155,7 +165,7 @@ export default class AddNewPatient extends Component{
                                 <input type='text' name='newPatientPesel' maxLength='11' minLength='11' value={this.state.newPatientPesel} onChange={this.handleChangeEvent}/>
                             </td>
                             <td>
-                                <p className='text-invalid-input'>
+                                <p className={this.state.newPatientPeselValid ? 'text-valid-input' : 'text-invalid-input'}>
                                     {this.state.newPatientPeselValid ? 'Valid' : 'Invalid'}
                                 </p>
                             </td>
@@ -166,7 +176,7 @@ export default class AddNewPatient extends Component{
                                 <input type='text' name='newPatientName' maxLength='35' minLength='2'  value={this.state.newPatientName} onChange={this.handleChangeEvent}/>
                             </td>
                             <td>
-                                <p className='text-invalid-input'>
+                                <p className={this.state.newPatientNameValid ? 'text-valid-input' : 'text-invalid-input'}>
                                     {this.state.newPatientNameValid ? 'Valid' : 'Invalid'}
                                 </p>
                             </td>
@@ -177,7 +187,7 @@ export default class AddNewPatient extends Component{
                                 <input type='text' name='newPatientSurname' maxLength='50' minLength='2'  value={this.state.newPatientSurname} onChange={this.handleChangeEvent}/>
                             </td>
                             <td>
-                                <p className='text-invalid-input'>
+                                <p className={this.state.newPatientSurnameValid ? 'text-valid-input' : 'text-invalid-input'}>
                                     {this.state.newPatientSurnameValid ? 'Valid' : 'Invalid'}
                                 </p>
                             </td>
@@ -188,7 +198,7 @@ export default class AddNewPatient extends Component{
                                 <input type='text' name='newPatientMiddlename' maxLength='50'  value={this.state.newPatientMiddlename} onChange={this.handleChangeEvent}/>
                             </td>
                             <td>
-                                <p className='text-invalid-input'>
+                                <p className={this.state.newPatientMiddlenameValid ? 'text-valid-input' : 'text-invalid-input'}>
                                     {this.state.newPatientMiddlenameValid ? 'Valid' : 'Invalid'}
                                 </p>
                             </td>
@@ -199,7 +209,7 @@ export default class AddNewPatient extends Component{
                                 <input type='text' name='newPatientEmail' maxLength='50'  value={this.state.newPatientEmail} onChange={this.handleChangeEvent}/>
                             </td>
                             <td>
-                                <p className='text-invalid-input'>
+                                <p className={this.state.newPatientEmailValid ? 'text-valid-input' : 'text-invalid-input'}>
                                     {this.state.newPatientEmailValid ? 'Valid' : 'Invalid'}
                                 </p>
                             </td>

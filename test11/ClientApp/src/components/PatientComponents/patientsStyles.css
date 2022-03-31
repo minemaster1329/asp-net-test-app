@@ -2,3 +2,8 @@
     color: red;
     margin: 5px;
 }
+
+.text-valid-input {
+    color: green;
+    margin: 5px;
+}

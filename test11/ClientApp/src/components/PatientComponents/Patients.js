@@ -87,10 +87,13 @@ export default class Patients extends Component {
                         <td>{this.renderGender(patient.gender)}</td>
                         <td>{patient.email}</td>
                         <td>
-                            <Link to={{pathname: '/patientdetails', search: `id=${patient.pesel}`}}>See details</Link>
-                            &nbsp;
-                            &nbsp;
-                            <a className='link-primary' onClick={() => this.handleDeletePatient(patient.pesel)}>Delete</a>
+                            <p>
+                                <Link to={{pathname: '/patientdetails', search: `id=${patient.pesel}`}}>Details</Link>
+                                &nbsp;
+                                <a className='link-primary' onClick={() => this.handleDeletePatient(patient.pesel)}>Delete</a>
+                                &nbsp;
+                                <Link to={{pathname: '/editpatient', search: `id=${patient.pesel}`}}>Edit</Link>
+                            </p>
                         </td>
                     </tr>
                 )}

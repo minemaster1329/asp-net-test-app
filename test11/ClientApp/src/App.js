@@ -10,6 +10,7 @@ import Patients from "./components/PatientComponents/Patients";
 import PatientDetails from "./components/PatientComponents/PatientDetails";
 import AddNewPatient from "./components/PatientComponents/AddNewPatient";
 import {Switch} from "react-router-dom";
+import EditPatientForm from "./components/PatientComponents/EditPatientForm";
 
 export default class App extends Component {
   static displayName = App.name;
@@ -22,7 +23,16 @@ export default class App extends Component {
               <Route path='/counter' component={Counter} />
               <Route path='/patients' component={Patients} />
               <Route path='/patientdetails'>
-                  <Route path='/:id' component={PatientDetails}/>
+                  <Switch>
+                      <Route path='/:id' component={PatientDetails}/>
+                      <Route component={NotFound}/>
+                  </Switch>
+              </Route>
+              <Route path='/editpatient'>
+                  <Switch>
+                      <Route path='/:id' component={EditPatientForm}/>
+                      <Route component={NotFound}/>
+                  </Switch>
               </Route>
               <Route path='/addnewpatient' component={AddNewPatient}/>
               <Route component={NotFound}/>

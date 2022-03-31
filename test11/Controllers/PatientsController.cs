@@ -1,5 +1,7 @@
+using System.Data;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using test11.Models;
 
 namespace test11.Controllers;
@@ -74,5 +76,25 @@ public class PatientsController : ControllerBase
         _context.Patients.Remove(pt);
         _context.SaveChanges();
         return Ok("Patient removed successfully");
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> SavePatientChanges(string id, [FromBody] Patient pt)
+    {
+        if (!id.Equals(pt.Pesel)) return BadRequest();
+        if (_context.Patients.Any(pat => pat.Pesel.Equals(id)))
+        {
+            _context.Entry(pt).State = EntityState.Modified;
+            try
+            {
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
+            catch (DBConcurrencyException)
+            {
+                return BadRequest();
+            }
+        }
+        else return NotFound("Patient with specified id not found");
     }
 }

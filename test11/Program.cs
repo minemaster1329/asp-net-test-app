@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using test11;
+using test11.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,12 +11,14 @@ builder.Services.AddControllersWithViews().AddJsonOptions(options =>
     options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
 });
 
+// Adding database context
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseNpgsql(
         $"Server=127.0.0.1;Port=5432;Database={builder.Configuration["test11:Database"]};User Id={builder.Configuration["test11:DatabaseUser"]};Password={builder.Configuration["test11:DatabasePassword"]};");
 });
 
+//Adding CORS policy
 builder.Services.AddCors((options) =>
 {
     options.AddPolicy("AllowCorsPolicy", builder =>
@@ -37,6 +40,7 @@ using (var scope = app.Services.CreateScope())
 }
 
 // Configure the HTTP request pipeline.
+// adding exception handler page
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -49,9 +53,9 @@ app.UseStaticFiles();
 app.UseRouting();
 
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller}/{action=Index}/{id?}");
+// app.MapControllerRoute(
+//     name: "default",
+//     pattern: "{controller}/{action=Index}/{id?}");
 
 app.MapControllerRoute(
     name: "api",

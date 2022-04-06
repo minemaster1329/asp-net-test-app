@@ -2,6 +2,7 @@ using System.Data;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using test11.Data;
 using test11.Models;
 
 namespace test11.Controllers;

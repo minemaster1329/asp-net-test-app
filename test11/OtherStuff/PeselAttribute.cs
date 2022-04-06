@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 using test11.Models;
 
-namespace test11;
+namespace test11.OtherStuff;
 
 public class PeselAttribute : ValidationAttribute
 {
@@ -25,7 +25,7 @@ public class PeselAttribute : ValidationAttribute
 
     private bool CheckPeselCehcksum(string value)
     {
-        int[] weights = new int[4] {1, 3, 7, 9};
+        int[] weights = new int[] {1, 3, 7, 9};
         int sum = 0;
         for (int i = 0; i < 10; i++)
         {

@@ -15,7 +15,7 @@ export default class Patients extends Component {
     }
     
     componentDidMount() {
-        this.populatePatientsData();
+        this.populatePatientsData().then();
     }
 
     render(){
@@ -38,14 +38,14 @@ export default class Patients extends Component {
             return (
                 <div>
                     <h1>Patients</h1>
-                    {Patients.renderPatientsTable(this.state.patients)}   
+                    {this.renderPatientsTable(this.state.patients)}   
                     <Link to='/addnewpatient'>Add new patient to system</Link>
                 </div>
             )   
         }
     }
     
-    static handleDeletePatient(id){
+    handleDeletePatient = (id) => {
         let result = window.confirm(`are you sure you want to delete patient with id ${id} ?`);
         
         if (result === true){
@@ -53,8 +53,17 @@ export default class Patients extends Component {
                 method: 'DELETE'
             }).then(response => {
                 if (response.ok) {
-                    alert(`Successfully removed ${id}`)
-                    this.forceUpdate();
+                    // alert(`Successfully removed ${id}`)
+                    this.setState(previousState => ({
+                        ...previousState,
+                        loading: true,
+                        patients: []
+                    }))
+                    this.populatePatientsData().then();
+                    // this.setState(previousState => ({
+                    //     ...previousState,
+                    //     patients: previousState.patients.filter((patient) => patient.pesel !== id)
+                    // }))
                 }
                 else {
                     alert('Something went wrong');
@@ -63,7 +72,7 @@ export default class Patients extends Component {
         }
     }
     
-    static renderPatientsTable(patients) {
+    renderPatientsTable = (patients) => {
         return (
             <table className='table table-striped'>
                 <thead className='thead-dark'>
@@ -83,7 +92,7 @@ export default class Patients extends Component {
                         <td>{patient.pesel}</td>
                         <td>{patient.name}</td>
                         <td>{patient.surname}</td>
-                        <td>{patient.middlename}</td>
+                        <td>{patient.middleName}</td>
                         <td>{this.renderGender(patient.gender)}</td>
                         <td>{patient.email}</td>
                         <td>
@@ -102,7 +111,7 @@ export default class Patients extends Component {
         )
     }
     
-    static renderGender(gender){
+    renderGender = (gender) => {
         switch (gender){
             case 0:
                 return 'Male'

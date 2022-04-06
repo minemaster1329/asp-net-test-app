@@ -66,9 +66,13 @@ export default class EditPatientForm extends React.Component {
             patient: {
                 ...prevState.patient,
                 [name]: value
-            },
-            patient_changed: true
+            }
         }));
+        
+        this.setState(prevState => ({
+            ...prevState,
+            patient_changed: JSON.stringify(prevState.patient) !== JSON.stringify(prevState.patient_prev)
+        }))
     }
     
     handleResetButtonClick = () => {
@@ -81,12 +85,13 @@ export default class EditPatientForm extends React.Component {
     
     handleSubmitButtonClick = () => {
         if (this.state.data_valid.email && this.state.data_valid.surname && this.state.data_valid.middleName && this.state.data_valid.email){
+            if (!this.state.patient_changed) return;
             if (window.confirm("Save changes to patient?")){
                 const patient = {
                     Pesel: this.state.patient.pesel,
                     Name: this.state.patient.name,
                     Surname: this.state.patient.surname,
-                    MiddleName: this.state.patient.middlename,
+                    MiddleName: this.state.patient.middleName,
                     Email: this.state.patient.email,
                     Gender: parseInt(this.state.patient.gender)
                 }
@@ -99,6 +104,10 @@ export default class EditPatientForm extends React.Component {
                 fetch(`/api/Patients/SavePatientChanges/${patient.Pesel}`, requestOptions).then(response => {
                     if (response.ok){
                         alert("Patient saved successfully");
+                        this.setState(prevState => ({
+                            ...prevState,
+                            patient_prev: prevState.patient
+                        }))
                     }
 
                     else {

@@ -1,13 +1,14 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using test11.OtherStuff;
 
 namespace test11.Models;
 
 public class Patient
 {
     [Key]
-    [Pesel]
-    public string Pesel { get; set; }
+    [Pesel] 
+    public string Pesel { get; set; } = "00000000000";
 
     [Required]
     [RegularExpression(@"^\p{Lu}\p{Ll}+$")]
@@ -23,7 +24,7 @@ public class Patient
     [MaxLength(50)]
     public string MiddleName { get; set; } = "";
 
-    [RegularExpression(@"^[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}$")]
+    [RegularExpression(@"^[A-Z0-9a-z]+@[A-Za-z0-9]+\.[A-Za-z]{2,64}$")]
     [MaxLength(50)]
     public string Email { get; set; } = "";
     [Required]

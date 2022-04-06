@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using test11.Models;
 
-namespace test11;
+namespace test11.Data;
 
 public class ApplicationDbContext : DbContext
 {

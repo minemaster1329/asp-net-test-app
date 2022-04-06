@@ -92,7 +92,8 @@ export default class AddNewPatient extends Component{
                 else {
                     response.text().then(text=> {
                         console.error(text);
-                    })  
+                        alert(text);
+                    })
                 }
             }).catch((error) => {
                 if (error instanceof String){

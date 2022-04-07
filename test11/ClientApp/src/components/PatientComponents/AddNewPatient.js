@@ -42,22 +42,21 @@ export default class AddNewPatient extends Component{
             newPatientMiddlenameValid: true,
             newPatientEmailValid: true,
         };
-        
-        this.handleChangeEvent = this.handleChangeEvent.bind(this);
-        this.handleFormSubmit = this.handleFormSubmit.bind(this);
-        this.handleClearForm = this.handleClearForm.bind(this);
-        this.validateField = this.validateField.bind(this);
     }
     
-    handleFormSubmit(event){
+    /** Handle form submit action function*/
+    handleFormSubmit = (event) => {
+        //prevent from redirecting to other page
         event.preventDefault();
         
+        //check if all data fields are valid
         if (this.state.newPatientNameValid &&
             this.state.newPatientSurnameValid &&
             this.state.newPatientMiddlenameValid &&
             this.state.newPatientPeselValid &&
             this.state.newPatientEmailValid
         ) {
+            //create new patient object to be send to server
             let newPatient = {
                 Pesel: this.state.newPatientPesel,
                 Name: this.state.newPatientName,
@@ -66,15 +65,19 @@ export default class AddNewPatient extends Component{
                 Email: this.state.newPatientEmail,
                 Gender: parseInt(this.state.newPatientGender)
             }
-
+            
+            //send new patient to server via POST request
             fetch('api/patients/addnewpatient', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(newPatient)
             }).then(response => {
+                //check if server response was OK
                 if (response.ok){
+                    //patient was added successfully, tell user about it
                     alert("Patient added successfully.")
                     
+                    //reset all input fields
                     this.setState({
                         newPatientPesel: "",
                         newPatientName: "",
@@ -90,6 +93,7 @@ export default class AddNewPatient extends Component{
                     })
                 }
                 else {
+                    //if something went wrong, tell user what was wrong
                     response.text().then(text=> {
                         console.error(text);
                         alert(text);
@@ -105,52 +109,62 @@ export default class AddNewPatient extends Component{
         else alert("Some fields filled wrong!");
     }
     
-    handleClearForm(event){
+    /** handle reset action for form */
+    handleClearForm = (event) => {
+        //prevent default event 
         event.preventDefault();
+        //reset all field values
         this.setState({
             newPatientPesel: "",
             newPatientName: "",
             newPatientSurname: "",
             newPatientMiddlename: "",
             newPatientGender: 0,
-            newPatientEmail: ""
+            newPatientEmail: "",
+            newPatientPeselValid: false,
+            newPatientNameValid: false,
+            newPatientSurnameValid: false,
+            newPatientMiddlenameValid: true,
+            newPatientEmailValid: true,
         });
     }
     
-    handleChangeEvent(event){
-        let target = event.target;
-        const value = target.value;
-        const name = target.name;
+    /** handle field value changed event */
+    handleChangeEvent = (event) => {
+        //get edited control name and value
+        let {name, value} = event.target;
+        //validate value for specified field
         this.validateField(name, value);
+        //set new control value
         this.setState({
             [name]: value
         });
     }
     
-    validateField(fieldName, fieldValue){
+    //validate field value
+    validateField = (fieldName, fieldValue) => {
+        let field_valid = false;
+        //select regex for specified field and check if value matches it
         switch(fieldName){
             case 'newPatientPesel':
-                this.setState({
-                    [fieldName+'Valid']: validatePatientPesel(fieldValue)
-                });
+                field_valid = validatePatientPesel(fieldValue)
                 break;
             case 'newPatientName':
             case 'newPatientSurname':
-                this.setState({
-                    [fieldName+'Valid']: patternNames.test(fieldValue)
-                });
+                field_valid = patternNames.test(fieldValue)
                 break;
             case 'newPatientMiddlename':
-                this.setState({
-                    [fieldName+'Valid']: /^$/.test(fieldValue) || patternNames.test(fieldValue)
-                });
+                field_valid = /^$/.test(fieldValue) || patternNames.test(fieldValue)
                 break;
             case 'newPatientEmail':
-                this.setState({
-                    [fieldName+'Valid']: patternEmail.test(fieldValue)
-                });
+                field_valid = patternEmail.test(fieldValue);
                 break;
         }
+        
+        //change validity state of specified field
+        this.setState({
+            [fieldName+'Valid']: field_valid
+        });
     }
     
     render(){

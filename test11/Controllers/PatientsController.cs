@@ -11,6 +11,9 @@ namespace test11.Controllers;
 [Route("api/[controller]/[action]")]
 public class PatientsController : ControllerBase
 {
+    /// <summary>
+    /// Application Database Context
+    /// </summary>
     private ApplicationDbContext _context;
 
     public PatientsController(ApplicationDbContext context)
@@ -18,12 +21,23 @@ public class PatientsController : ControllerBase
         _context = context;
     }
 
+    /// <summary>
+    /// Returns all patients from system
+    /// </summary>
+    /// <returns>Array with patients</returns>
     [HttpGet]
     public IActionResult GetAllPatients()
     {
         return Ok(_context.Patients.ToArray());
     }
 
+    /// <summary>
+    /// Returns patient with specified id
+    /// </summary>
+    /// <param name="id">Patient's id</param>
+    /// <returns>
+    /// Patient object if found, 404 status if patient with given id does not exist
+    /// </returns>
     [HttpGet("{id}")]
     public IActionResult GetPatientById(string id)
     {
@@ -38,19 +52,28 @@ public class PatientsController : ControllerBase
         return NotFound();
     }
 
+    /// <summary>
+    /// Checks if patient with specified id exists in system
+    /// </summary>
+    /// <param name="id">Patient's id</param>
+    /// <returns>true if exists, false if not</returns>
     [HttpGet("{id}")]
     public bool CheckIfIdExists(string? id)
     {
         return _context.Patients.Any((patient => patient.Pesel.Equals(id)));
     }
     
+    /// <summary>
+    /// Adds new patient to database
+    /// </summary>
+    /// <param name="pt">patient object</param>
+    /// <returns>Ok if patient added successfully, BadRequest if something went wrong (ex. patient with specified id already exists)</returns>
     [HttpPost]
     [Consumes("application/json")]
     public IActionResult AddNewPatient([FromBody] Patient pt)
     {
         if (_context.Patients.Any(p => pt.Pesel.Equals(p.Pesel)))
         {
-            Debug.WriteLine($"Patient with id {pt.Pesel} already exists in database");
             return BadRequest("Patient with specified id already exist");
         }
             
@@ -58,16 +81,19 @@ public class PatientsController : ControllerBase
         {
             _context.Patients.Add(pt);
             _context.SaveChanges();
-            Debug.WriteLine($"Patient with {pt.Pesel} added successfully");
             return Ok();
         }
         catch (Exception e)
         {
-            Debug.WriteLine($"Error when adding patient {pt.Pesel}: {e.Message}");
             return BadRequest(e.Message);
         }
     }
 
+    /// <summary>
+    /// Removes specified patient from database
+    /// </summary>
+    /// <param name="id">Patient's id</param>
+    /// <returns>Ok id patient successfully removed, NotFound if patient not found</returns>
     [HttpDelete("{id}")]
     public IActionResult RemovePatientFromDatabase(string id)
     {
@@ -79,6 +105,12 @@ public class PatientsController : ControllerBase
         return Ok("Patient removed successfully");
     }
 
+    /// <summary>
+    /// Changes data for specified patient
+    /// </summary>
+    /// <param name="id">Patient's id</param>
+    /// <param name="pt">Patient object with changed data</param>
+    /// <returns>Ok if patient edited successfully, BadRequest if something went wrong, NotFound if patient with specified id does not exist</returns>
     [HttpPut("{id}")]
     public async Task<IActionResult> SavePatientChanges(string id, [FromBody] Patient pt)
     {
@@ -96,6 +128,6 @@ public class PatientsController : ControllerBase
                 return BadRequest();
             }
         }
-        else return NotFound("Patient with specified id not found");
+        return NotFound("Patient with specified id not found");
     }
 }

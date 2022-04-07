@@ -6,8 +6,10 @@ const patternNames = /^[A-z][a-z]+$/
 const patternEmail = /(^$)|(^[A-Z0-9a-z]+@[A-Za-z0-9]+\.[A-Za-z]{2,64}$)/;
 
 export default class EditPatientForm extends React.Component {
+    /** function for validating form fields */
     validateField = (fieldname, fieldvalue) => {
         let field_valid = false;
+        //select regex for specified field and check if value matches it
         switch (fieldname) {
             case 'name':
             case 'surname':
@@ -20,7 +22,7 @@ export default class EditPatientForm extends React.Component {
                 field_valid = patternEmail.test(fieldvalue);
             break;
         }
-
+        //change validity state of specified field
         this.setState(prevState => ({
             ...prevState,
             data_valid: {
@@ -47,20 +49,22 @@ export default class EditPatientForm extends React.Component {
             error_when_fetching: false,
             error_message: ""
         };
-        
-        this.handleFormFieldChange = this.handleFormFieldChange.bind(this);
-        this.renderForm = this.renderForm.bind(this);
     }
     
     componentDidMount() {
-        this.fetchPatientData();
+        //fetch patient data if component mount
+        this.fetchPatientData().then();
     }
-    
-    handleFormFieldChange(event) {
+
+    /** handle field value changed */
+    handleFormFieldChange = (event) => {
+        //get field name and value
         let {name, value} = event.target;
         
+        //validate field value
         this.validateField(name, value);
         
+        //update specified patient field
         this.setState((prevState) => ({
             ...prevState,
             patient: {
@@ -69,13 +73,16 @@ export default class EditPatientForm extends React.Component {
             }
         }));
         
+        //check if patient was edited or not
         this.setState(prevState => ({
             ...prevState,
             patient_changed: JSON.stringify(prevState.patient) !== JSON.stringify(prevState.patient_prev)
         }))
     }
     
+    /** handle reset button action */
     handleResetButtonClick = () => {
+        //replace current patient object values with copy
         this.setState((prevState) => ({
             ...prevState,
             patient: prevState.patient_prev,
@@ -83,10 +90,15 @@ export default class EditPatientForm extends React.Component {
         }))
     }
     
+    /** handle submit button action */
     handleSubmitButtonClick = () => {
+        //check if all fields are correct
         if (this.state.data_valid.email && this.state.data_valid.surname && this.state.data_valid.middleName && this.state.data_valid.email){
+            //return from function if patient not changed
             if (!this.state.patient_changed) return;
+            //check if user is sure it wants to edit patient
             if (window.confirm("Save changes to patient?")){
+                //create new patient object
                 const patient = {
                     Pesel: this.state.patient.pesel,
                     Name: this.state.patient.name,
@@ -95,14 +107,19 @@ export default class EditPatientForm extends React.Component {
                     Email: this.state.patient.email,
                     Gender: parseInt(this.state.patient.gender)
                 }
+                
+                //create request options
                 const requestOptions = {
                     method: 'PUT',
                     headers: {'Content-Type' :  'application/json'},
                     body: JSON.stringify(patient)
                 };
 
+                //send edited patient object to database
                 fetch(`/api/Patients/SavePatientChanges/${patient.Pesel}`, requestOptions).then(response => {
+                    //check if server response was OK
                     if (response.ok){
+                        //if OK, tell user about that and replace original version of patient with new one
                         alert("Patient saved successfully");
                         this.setState(prevState => ({
                             ...prevState,
@@ -111,6 +128,7 @@ export default class EditPatientForm extends React.Component {
                     }
 
                     else {
+                        //if something went wrong, tell user about that fact via console
                         response.text().then(text => {
                             console.error(text);
                         })
@@ -119,11 +137,13 @@ export default class EditPatientForm extends React.Component {
             }
         }
         else {
+            //tell user, that some fields are filled with incorrect data
             alert("Some fields filled with incorrect data!")
         }
     }
 
-    renderForm(){
+    /** generates form object */
+    renderForm = () => {
         return(
             <div>
                 <h2>Editing patient {this.state.patient.pesel}</h2>
@@ -200,14 +220,19 @@ export default class EditPatientForm extends React.Component {
         )
     }
     
+    /** fetches patient specified by id */
     async fetchPatientData(){
+        //get patient id from query string
         let patient_id = qs.parse(this.props.location.search, {ignoreQueryPrefix: true}).id;
         
+        //fetch patient
         await fetch(`/api/Patients/GetPatientById/${patient_id}`).then((response) => {
             if (response.ok){
+                //if response was OK, return JSON for further processing
                 return response.json();
             }
             
+            //tell user that something went wrong (information displayed instead of form)
             this.setState((prevState) => ({
                 ...prevState,
                 loading: false,
@@ -215,8 +240,9 @@ export default class EditPatientForm extends React.Component {
                 error_message: response.statusText
             }))
             
-            throw new Error('something went wrong when fetching patient')
+            //throw new Error('something went wrong when fetching patient')
         }).then((responseJson) => {
+            //assign patient to state and create copy
             this.setState((prevState) => ({
                 ...prevState,
                 patient_prev: responseJson,

@@ -15,6 +15,7 @@ export default class Patients extends Component {
     }
     
     componentDidMount() {
+        //fetch patients from database after mounting component
         this.populatePatientsData().then();
     }
 
@@ -45,33 +46,37 @@ export default class Patients extends Component {
         }
     }
     
+    /** handles delete action */
     handleDeletePatient = (id) => {
+        //check if user really wants to delete specified patient
         let result = window.confirm(`are you sure you want to delete patient with id ${id} ?`);
         
         if (result === true){
+            //do Http DELETE request for specified patient
             fetch(`api/Patients/RemovePatientFromDatabase/${id}`.toLowerCase(), {
                 method: 'DELETE'
             }).then(response => {
                 if (response.ok) {
-                    // alert(`Successfully removed ${id}`)
+                    //if patient was successfully deleted, tell user about that fact
+                    alert(`Successfully removed ${id}`)
+                    //clear patients table
                     this.setState(previousState => ({
                         ...previousState,
                         loading: true,
                         patients: []
                     }))
+                    //re-fetch patients from database
                     this.populatePatientsData().then();
-                    // this.setState(previousState => ({
-                    //     ...previousState,
-                    //     patients: previousState.patients.filter((patient) => patient.pesel !== id)
-                    // }))
                 }
                 else {
+                    //if something went wrong when deleting patient, tell user about that fact
                     alert('Something went wrong');
                 }
             })
         }
     }
     
+    /** creates patient's table */
     renderPatientsTable = (patients) => {
         return (
             <table className='table table-striped'>
@@ -111,6 +116,7 @@ export default class Patients extends Component {
         )
     }
     
+    /** converts index to gender name */
     renderGender = (gender) => {
         switch (gender){
             case 0:
@@ -124,12 +130,16 @@ export default class Patients extends Component {
         }
     }
     
+    /** Fetches data from API server */
     async populatePatientsData(){
         await fetch('/api/Patients/GetAllPatients'.toLowerCase()).then((response) => {
+            // checks if response has code 200 (OK)
             if (response.ok){
+                //if response was OK, returns response body in JSON format
                 return response.json();
             }
             
+            // if response was not OK, display response status code and text
             this.setState({
                 patients: [],
                 loading: false,
@@ -137,9 +147,10 @@ export default class Patients extends Component {
                 error_code: response.status,
                 error_caption: response.statusText
             })
-            
+            //throw error to jump to catch promise
             throw new Error('Something went wrong when fetching from database')
         }).then((responseJson) => {
+            //if response was ok, set patients
             this.setState({
                 patients: responseJson,
                 loading: false,
@@ -148,6 +159,7 @@ export default class Patients extends Component {
                 error_caption: ""
             })
         }).catch((error) => {
+            //check if error is string (handled here) or is instance of error class (handled before)
             if (error instanceof String){
                 this.setState({
                     patients: [],

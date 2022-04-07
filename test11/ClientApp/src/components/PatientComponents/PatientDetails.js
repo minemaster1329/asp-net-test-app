@@ -9,23 +9,26 @@ export default class PatientDetails extends Component {
     }
     
     componentDidMount() {
-        this.fetchPatient();
+        //fetch data for specified patient
+        this.fetchPatient().then();
     }
     
-    static renderPatient(patient){
+    //render all patient data
+    renderPatient = (patient) => {
         return (
             <div>
                 <p>PESEL: {patient.pesel}</p>
                 <p>Name: {patient.name}</p>
                 <p>Surname: {patient.surname}</p>
                 <p>Middlename: {patient.middlename}</p>
-                <p>Gender: {PatientDetails.renderGender(patient.gender)}</p>
+                <p>Gender: {this.renderGender(patient.gender)}</p>
                 <p>Email: {patient.email}</p>
             </div>
         )
     }
     
-    static renderGender(genderNum){
+    //convert index number to gender
+    renderGender = (genderNum) => {
         switch(genderNum){
             case 0:
                 return 'Male';
@@ -39,11 +42,13 @@ export default class PatientDetails extends Component {
     }
 
     render(){
+        //check if component is fetching data
         if (this.state.loading){
             return (
                 <p>Loading...</p>
             )
         }
+        //check if there was an error when fetching
         if (this.state.error_when_fetching){
             return(
                 <div>
@@ -54,8 +59,9 @@ export default class PatientDetails extends Component {
             )
         }
         
+        //if fetch was successful, render patient's details 
         else {
-            let patient_det = PatientDetails.renderPatient(this.state.patient)
+            let patient_det = this.renderPatient(this.state.patient)
             return(
                 <div>
                     <h1>Patient's details:</h1>
@@ -66,13 +72,20 @@ export default class PatientDetails extends Component {
         }
     }
     
+    /** gets patient from server */
     async fetchPatient(){
+        //extract patient's pesel number from search string
         let id = qs.parse(this.props.location.search, {ignoreQueryPrefix: true}).id;
+        
+        //fetch patient from server
         await fetch(`api/Patients/GetPatientById/${id}`).then((response) => {
+            //check if server returned OK
             if (response.ok){
+                //if request was successful, return response body
                 return response.json();
             }
             
+            //if server returned an error, tell user what happened by passing code and text to state
             this.setState({
                 patient: undefined,
                 loading: false,
@@ -83,6 +96,7 @@ export default class PatientDetails extends Component {
             
             throw new Error('something went wrong when fetching patient')
         }).then((responseJson) => {
+            //add patient co component's state 
             this.setState({
                 patient: responseJson,
                 loading: false,
@@ -91,6 +105,7 @@ export default class PatientDetails extends Component {
                 error_message: ""
             })
         }).catch((error)=> {
+            //handle fetch error by passing error message to state
             if (error instanceof String){
                 this.setState({
                     patient: undefined,

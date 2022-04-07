@@ -9,6 +9,8 @@ public class ApplicationDbContext : DbContext
     {
         
     }
-
+    /// <summary>
+    /// Patients database set
+    /// </summary>
     public DbSet<Patient> Patients { get; set; }
 }

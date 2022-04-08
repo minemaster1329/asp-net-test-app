@@ -63,7 +63,8 @@ export default class AddNewPatient extends Component{
                 Surname: this.state.newPatientSurname,
                 MiddleName: this.state.newPatientMiddlename,
                 Email: this.state.newPatientEmail,
-                Gender: parseInt(this.state.newPatientGender)
+                Gender: parseInt(this.state.newPatientGender),
+                Visits: []
             }
             
             //send new patient to server via POST request

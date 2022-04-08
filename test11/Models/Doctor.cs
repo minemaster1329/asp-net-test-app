@@ -1,10 +1,9 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using test11.OtherStuff;
 
 namespace test11.Models;
 
-public class Patient
+public class Doctor
 {
     [Key]
     [Pesel] 
@@ -29,6 +28,10 @@ public class Patient
     public string Email { get; set; } = "";
     [Required]
     public Gender Gender { get; set;}
-
-    public List<Visit> Visits { get; set; }
+    
+    [RegularExpression(@"^\d{9}$")]
+    public string Phone { get; set; }
+    
+    [Required]
+    public Specialization Specialization { get; set; } 
 }

@@ -105,7 +105,8 @@ export default class EditPatientForm extends React.Component {
                     Surname: this.state.patient.surname,
                     MiddleName: this.state.patient.middleName,
                     Email: this.state.patient.email,
-                    Gender: parseInt(this.state.patient.gender)
+                    Gender: parseInt(this.state.patient.gender),
+                    Visits: []
                 }
                 
                 //create request options

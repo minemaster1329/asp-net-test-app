@@ -1,4 +1,5 @@
 #Project specification
+
 Made with JetBrains Rider IDE (based on "ASP.NET Core Web Application with ReactJS" template)
 
 * ASP.NET Core version: 6.0
@@ -6,7 +7,9 @@ Made with JetBrains Rider IDE (based on "ASP.NET Core Web Application with React
 * ReactJS version: 17.0.2
 
 Application works on port: 44491
+
 #First run preparations  
+
 In order to run project for the first time You need to do some preparations:
 1. Run "test11 - create database" configuration - creates Docker container "test11_database" with PostgreSQL database
 2. Add following secrets:
@@ -20,10 +23,12 @@ In order to run project for the first time You need to do some preparations:
 3. run "dotnet ef database update" command to apply migrations
 
 #Running project
+
 1. Make sure the "test11_database" container is running (if not, please start it)
 2. Run "test11" run configuration
 
 #Project warnings
+
 Sometimes, when editing frontend, after compilation error "Uncaught ReferenceError: process is not defined" is thrown. I'm still trying to figure out what causes it.
 
 Temporary fix method is to refresh page after every frontend compilation. 

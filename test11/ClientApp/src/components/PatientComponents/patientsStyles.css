@@ -7,3 +7,16 @@
     color: green;
     margin: 5px;
 }
+
+.form {
+    max-width: 700px;
+    padding: 1em;
+}
+
+button {
+    margin: 1em;
+}
+
+label {
+    font-weight: 600;
+}

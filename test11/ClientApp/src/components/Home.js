@@ -2,6 +2,11 @@ import React, { Component } from 'react';
 
 export class Home extends Component {
   static displayName = Home.name;
+  
+  constructor(props){
+      super(props);
+      document.title = "Main Page"
+  }
 
   render () {
     return (

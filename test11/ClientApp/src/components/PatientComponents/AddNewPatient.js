@@ -29,6 +29,7 @@ function validatePatientPesel(pesel){
 export default class AddNewPatient extends Component{
     constructor(props){
         super(props);
+        document.title = "Add new patient";
         this.state = {
             newPatientPesel: "",
             newPatientName: "",

@@ -4,6 +4,7 @@ import {Link} from "react-router-dom";
 
 export default class Patients extends Component {
     constructor(props){
+        document.title = "Patients list"
         super(props);
         this.state = {
             patients: [],

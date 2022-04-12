@@ -2,12 +2,14 @@
 import qs from "qs";
 import {Link} from "react-router-dom";
 import './patientsStyles.css'
+import {Button, Form, FormFeedback, FormGroup, Input, Label} from "reactstrap";
 const patternNames = /^[A-z][a-z]+$/
 const patternEmail = /(^$)|(^[A-Z0-9a-z]+@[A-Za-z0-9]+\.[A-Za-z]{2,64}$)/;
 
 export default class EditPatientForm extends React.Component {
     /** function for validating form fields */
     validateField = (fieldname, fieldvalue) => {
+        if (fieldname === "gender") return;
         let field_valid = false;
         //select regex for specified field and check if value matches it
         switch (fieldname) {
@@ -34,7 +36,7 @@ export default class EditPatientForm extends React.Component {
     
     constructor(props){
         super(props);
-        
+        document.title = "Editing patient"
         this.state = {
             patient_prev: undefined,
             patient: undefined,
@@ -60,18 +62,20 @@ export default class EditPatientForm extends React.Component {
     handleFormFieldChange = (event) => {
         //get field name and value
         let {name, value} = event.target;
-        
         //validate field value
         this.validateField(name, value);
-        
+
         //update specified patient field
         this.setState((prevState) => ({
             ...prevState,
             patient: {
                 ...prevState.patient,
-                [name]: value
+                [name]: (name === "gender") ? parseInt(value) : value
             }
         }));
+        
+        console.log(this.state.patient);
+        console.log(this.state.patient_prev);
         
         //check if patient was edited or not
         this.setState(prevState => ({
@@ -147,64 +151,80 @@ export default class EditPatientForm extends React.Component {
     renderForm = () => {
         return(
             <div>
-                <h2>Editing patient {this.state.patient.pesel}</h2>
-                <table>
-                    <tbody>
-                        <tr>
-                            <td>Name: </td>
-                            <td><input type='text' name='name' value={this.state.patient.name} onChange={this.handleFormFieldChange}/></td>
-                            <td>
-                                <p className={this.state.data_valid.name ? 'text-valid-input' : 'text-invalid-input'}>
-                                    {this.state.data_valid.name ? 'Valid' : 'Invalid'}
-                                </p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Surname: </td>
-                            <td><input type='text' name='surname' value={this.state.patient.surname} onChange={this.handleFormFieldChange}/></td>
-                            <td>
-                                <p className={this.state.data_valid.surname ? 'text-valid-input' : 'text-invalid-input'}>
-                                    {this.state.data_valid.surname ? 'Valid' : 'Invalid'}
-                                </p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Middlename: </td>
-                            <td><input type='text' name='middleName' value={this.state.patient.middleName} onChange={this.handleFormFieldChange}/></td>
-                            <td>
-                                <p className={this.state.data_valid.middleName ? 'text-valid-input' : 'text-invalid-input'}>
-                                    {this.state.data_valid.middleName ? 'Valid' : 'Invalid'}
-                                </p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Email: </td>
-                            <td><input type='text' name='email' value={this.state.patient.email} onChange={this.handleFormFieldChange}/></td>
-                            <td>
-                                <p className={this.state.data_valid.email ? 'text-valid-input' : 'text-invalid-input'}>
-                                    {this.state.data_valid.email ? 'Valid' : 'Invalid'}
-                                </p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Gender: </td>
-                            <td>
-                                <select name='gender' value={this.state.patient.gender} onChange={this.handleFormFieldChange}>
-                                    <option value='0'>Male</option>
-                                    <option value='1'>Female</option>
-                                    <option value='2'>Unknown</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colSpan={2}>
-                                <button onClick={this.handleSubmitButtonClick}>Submit</button>
-                                &nbsp;
-                                <button onClick={this.handleResetButtonClick}>Reset</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <Form className="form">
+                    <h2>Editing patient {this.state.patient.pesel}</h2>
+                    <FormGroup>
+                        <Label for="patientName" >Name</Label>
+                        <Input
+                            type="text"
+                            name="name"
+                            id="patientName"
+                            valid={this.state.data_valid.name}
+                            invalid={!this.state.data_valid.name}
+                            value={this.state.patient.name}
+                            onChange={this.handleFormFieldChange}
+                        />
+                        <FormFeedback>Invalid email format</FormFeedback>
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="patientSurname" >Surname</Label>
+                        <Input
+                            type="text"
+                            name="surname"
+                            id="patientSurname"
+                            valid={this.state.data_valid.surname}
+                            invalid={!this.state.data_valid.surname}
+                            value={this.state.patient.surname}
+                            onChange={this.handleFormFieldChange}
+                        />
+                        <FormFeedback>Invalid email format</FormFeedback>
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="patientMiddleName" >Middle Name</Label>
+                        <Input
+                            type="text"
+                            name="middleName"
+                            id="patientMiddleName"
+                            valid={this.state.data_valid.middleName}
+                            invalid={!this.state.data_valid.middleName}
+                            value={this.state.patient.middleName}
+                            onChange={this.handleFormFieldChange}
+                        />
+                        <FormFeedback>Invalid email format</FormFeedback>
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="patientEmail" >Email</Label>
+                        <Input 
+                            type="email" 
+                            name="email" 
+                            id="patientEmail" 
+                            placeholder="example@example.com" 
+                            valid={this.state.data_valid.email}
+                            invalid={!this.state.data_valid.email}
+                            value={this.state.patient.email}
+                            onChange={this.handleFormFieldChange}
+                        />
+                        <FormFeedback>Invalid email format</FormFeedback>
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="patientGender">Gender</Label>
+                        <Input 
+                            type="select" 
+                            name="gender" 
+                            id="patientGender" 
+                            value={this.state.patient.gender} 
+                            onChange={this.handleFormFieldChange}
+                        >
+                            <option value='0'>Male</option>
+                            <option value='1'>Female</option>
+                            <option value='2'>Unknown</option>
+                        </Input>
+                    </FormGroup>
+                    <FormGroup>
+                        <Button onClick={this.handleSubmitButtonClick}>Submit</Button>
+                        <Button onClick={this.handleResetButtonClick}>Reset</Button>
+                    </FormGroup>
+                </Form>
                 <Link to='/patients'>Back to patients table</Link>
                 {this.state.patient_changed ? <p>Values Changed, please save changes!</p> : null}
             </div>

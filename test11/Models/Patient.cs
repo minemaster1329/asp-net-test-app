@@ -34,4 +34,20 @@ public class Patient
     public Gender Gender { get; set;}
 
     public List<Visit> Visits { get; set; }
+
+    public Patient(string pesel, string name, string surname, string middleName, string email, int gender)
+    {
+        Pesel = pesel;
+        Name = name;
+        Surname = surname;
+        MiddleName = middleName;
+        Email = email;
+        Gender = gender switch
+        {
+            0 => Gender.Male,
+            1 => Gender.Female,
+            2 => Gender.Other,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+    }
 }

@@ -12,7 +12,7 @@ public class PeselAttribute : ValidationAttribute
     {
         var patient = (Patient) validationContext.ObjectInstance;
 
-        if (CheckPeselFormat(patient.Pesel) && CheckPeselCehcksum(patient.Pesel)) return ValidationResult.Success;
+        if (CheckPeselFormat(patient.Pesel) && CheckPeselChecksum(patient.Pesel)) return ValidationResult.Success;
         else return new ValidationResult(_errorCode);
     }
 
@@ -23,7 +23,7 @@ public class PeselAttribute : ValidationAttribute
         return formatValid;
     }
 
-    private bool CheckPeselCehcksum(string value)
+    private bool CheckPeselChecksum(string value)
     {
         int[] weights = new int[] {1, 3, 7, 9};
         int sum = 0;

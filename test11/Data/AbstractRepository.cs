@@ -1,29 +1,38 @@
+using Microsoft.EntityFrameworkCore;
+using test11.Models;
+
 namespace test11.Data;
 
 public abstract class AbstractRepository<T> : IRepository<T> where T : class
 {
+    protected ApplicationDbContext ApplicationDbContext { get; private set; }
+    protected AbstractRepository(ApplicationDbContext applicationDbContext)
+    {
+        ApplicationDbContext = applicationDbContext;
+    } 
+
     public IQueryable<T> GetAll()
     {
-        throw new NotImplementedException();
+        return ApplicationDbContext.Set<T>().AsNoTracking();
     }
 
-    public Task<T> GetByIdAsync(int id)
+    public abstract Task<T> GetByIdAsync(int id);
+
+    public async Task AddAsync(T entity)
     {
-        throw new NotImplementedException();
+        await ApplicationDbContext.AddAsync(entity);
+        await ApplicationDbContext.SaveChangesAsync();
     }
 
-    public Task AddAsync(T entity)
+    public async Task UpdateAsync(T entity)
     {
-        throw new NotImplementedException();
+        ApplicationDbContext.Update(entity);
+        await ApplicationDbContext.SaveChangesAsync();
     }
 
-    public Task UpdateAsync(T entity)
+    public async Task DeleteAsync(T entity)
     {
-        throw new NotImplementedException();
-    }
-
-    public Task DeleteAsync(T entity)
-    {
-        throw new NotImplementedException();
+        ApplicationDbContext.Remove(entity);
+        await ApplicationDbContext.SaveChangesAsync();
     }
 }

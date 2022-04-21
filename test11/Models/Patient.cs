@@ -1,3 +1,4 @@
+using System.CodeDom.Compiler;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using test11.OtherStuff;
@@ -7,6 +8,8 @@ namespace test11.Models;
 public class Patient
 {
     [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int PatientId { get; set; }
     [Pesel] 
     public string Pesel { get; set; } = "00000000000";
 

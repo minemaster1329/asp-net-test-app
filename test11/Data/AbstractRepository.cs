@@ -16,23 +16,23 @@ public abstract class AbstractRepository<T> : IRepository<T> where T : class
         return ApplicationDbContext.Set<T>().AsNoTracking();
     }
 
-    public abstract Task<T> GetByIdAsync(int id);
+    public abstract Task<T?> GetByIdAsync(int id);
 
     public async Task AddAsync(T entity)
     {
-        await ApplicationDbContext.AddAsync(entity);
+        await ApplicationDbContext.Set<T>().AddAsync(entity);
         await ApplicationDbContext.SaveChangesAsync();
     }
 
     public async Task UpdateAsync(T entity)
     {
-        ApplicationDbContext.Update(entity);
+        ApplicationDbContext.Set<T>().Update(entity);
         await ApplicationDbContext.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(T entity)
     {
-        ApplicationDbContext.Remove(entity);
+        ApplicationDbContext.Set<T>().Remove(entity);
         await ApplicationDbContext.SaveChangesAsync();
     }
 }

@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using test11;
 using test11.Data;
+using test11.Models;
+using test11.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +19,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(
         $"Server=127.0.0.1;Port=5432;Database={builder.Configuration["test11:Database"]};User Id={builder.Configuration["test11:DatabaseUser"]};Password={builder.Configuration["test11:DatabasePassword"]};");
 });
+
+builder.Services.AddScoped<IRepository<Patient>, PatientRepository>();
+builder.Services.AddScoped<IPatientService, PatientService>();
 
 //Adding CORS policy
 builder.Services.AddCors((options) =>

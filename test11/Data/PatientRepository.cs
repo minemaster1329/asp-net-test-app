@@ -7,7 +7,7 @@ public class PatientRepository : AbstractRepository<Patient>
 {
     public PatientRepository(ApplicationDbContext applicationDbContext) : base(applicationDbContext) {}
     
-    public override async Task<Patient> GetByIdAsync(int id)
+    public override async Task<Patient?> GetByIdAsync(int id)
     {
         return await ApplicationDbContext.Set<Patient>().FirstOrDefaultAsync(patient => patient.PatientId == id);
     }

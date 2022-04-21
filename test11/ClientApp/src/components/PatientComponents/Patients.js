@@ -103,11 +103,11 @@ export default class Patients extends Component {
                         <td>{patient.email}</td>
                         <td>
                             <p>
-                                <Link to={{pathname: '/patientdetails', search: `id=${patient.pesel}`}}>Details</Link>
+                                <Link to={{pathname: '/patientdetails', search: `id=${patient.patientId}`}}>Details</Link>
                                 &nbsp;
-                                <a className='link-primary' onClick={() => this.handleDeletePatient(patient.pesel)}>Delete</a>
+                                <a className='link-primary' onClick={() => this.handleDeletePatient(patient.patientId)}>Delete</a>
                                 &nbsp;
-                                <Link to={{pathname: '/editpatient', search: `id=${patient.pesel}`}}>Edit</Link>
+                                <Link to={{pathname: '/editpatient', search: `id=${patient.patientId}`}}>Edit</Link>
                             </p>
                         </td>
                     </tr>

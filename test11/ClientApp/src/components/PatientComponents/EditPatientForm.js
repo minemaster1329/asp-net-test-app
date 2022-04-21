@@ -104,6 +104,7 @@ export default class EditPatientForm extends React.Component {
             if (window.confirm("Save changes to patient?")){
                 //create new patient object
                 const patient = {
+                    PatientId: this.state.patient.patientId,
                     Pesel: this.state.patient.pesel,
                     Name: this.state.patient.name,
                     Surname: this.state.patient.surname,
@@ -121,7 +122,7 @@ export default class EditPatientForm extends React.Component {
                 };
 
                 //send edited patient object to database
-                fetch(`/api/Patients/SavePatientChanges/${patient.Pesel}`, requestOptions).then(response => {
+                fetch(`/api/Patients/SavePatientChanges/${this.state.patient_prev.patientId}`, requestOptions).then(response => {
                     //check if server response was OK
                     if (response.ok){
                         //if OK, tell user about that and replace original version of patient with new one
@@ -152,7 +153,7 @@ export default class EditPatientForm extends React.Component {
         return(
             <div>
                 <Form className="form">
-                    <h2>Editing patient {this.state.patient.pesel}</h2>
+                    <h2>Editing patient {this.state.patient.patientId}</h2>
                     <FormGroup>
                         <Label for="patientName" >Name</Label>
                         <Input

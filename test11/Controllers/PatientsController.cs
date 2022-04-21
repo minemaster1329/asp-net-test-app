@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using test11.Data;
 using test11.Models;
+using test11.Services;
+using test11.ViewModels;
 
 namespace test11.Controllers;
 
@@ -11,14 +13,13 @@ namespace test11.Controllers;
 [Route("api/[controller]/[action]")]
 public class PatientsController : ControllerBase
 {
-    /// <summary>
-    /// Application Database Context
-    /// </summary>
-    private ApplicationDbContext _context;
+    private readonly IPatientService _patientService;
+    private readonly IServiceScopeFactory _serviceScopeFactory;
 
-    public PatientsController(ApplicationDbContext context)
+    public PatientsController(IPatientService patientService, IServiceScopeFactory serviceScopeFactory)
     {
-        _context = context;
+        _patientService = patientService;
+        _serviceScopeFactory = serviceScopeFactory;
     }
 
     /// <summary>
@@ -26,9 +27,10 @@ public class PatientsController : ControllerBase
     /// </summary>
     /// <returns>Array with patients</returns>
     [HttpGet]
-    public IActionResult GetAllPatients()
+    public async Task<IActionResult> GetAllPatients()
     {
-        return Ok(_context.Patients.ToArray());
+        IList<Patient> patients = await _patientService.GetAllPatients();
+        return Ok(patients.ToArray());
     }
 
     /// <summary>
@@ -38,11 +40,10 @@ public class PatientsController : ControllerBase
     /// <returns>
     /// Patient object if found, 404 status if patient with given id does not exist
     /// </returns>
-    [HttpGet("{id}")]
-    public IActionResult GetPatientById(string id)
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetPatientById(int id)
     {
-        if (string.IsNullOrEmpty(id)) return BadRequest();
-        Patient? patient = _context.Patients.Find(id);
+        Patient? patient = await _patientService.GetPatientById(id);
 
         if (patient is not null)
         {
@@ -53,34 +54,17 @@ public class PatientsController : ControllerBase
     }
 
     /// <summary>
-    /// Checks if patient with specified id exists in system
-    /// </summary>
-    /// <param name="id">Patient's id</param>
-    /// <returns>true if exists, false if not</returns>
-    [HttpGet("{id}")]
-    public bool CheckIfIdExists(string? id)
-    {
-        return _context.Patients.Any((patient => patient.Pesel.Equals(id)));
-    }
-    
-    /// <summary>
     /// Adds new patient to database
     /// </summary>
     /// <param name="pt">patient object</param>
     /// <returns>Ok if patient added successfully, BadRequest if something went wrong (ex. patient with specified id already exists)</returns>
     [HttpPost]
     [Consumes("application/json")]
-    public IActionResult AddNewPatient([FromBody] Patient pt)
+    public async Task<IActionResult> AddNewPatient([FromBody] NewPatientViewModel pt)
     {
-        if (_context.Patients.Any(p => pt.Pesel.Equals(p.Pesel)))
-        {
-            return BadRequest("Patient with specified id already exist");
-        }
-            
         try
         {
-            _context.Patients.Add(pt);
-            _context.SaveChanges();
+            await _patientService.AddNewPatient(pt.Pesel, pt.Name, pt.Surname, pt.MiddleName, pt.Email, pt.Gender);
             return Ok();
         }
         catch (Exception e)
@@ -94,14 +78,10 @@ public class PatientsController : ControllerBase
     /// </summary>
     /// <param name="id">Patient's id</param>
     /// <returns>Ok id patient successfully removed, NotFound if patient not found</returns>
-    [HttpDelete("{id}")]
-    public IActionResult RemovePatientFromDatabase(string id)
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> RemovePatientFromDatabase(int id)
     {
-        Patient? pt = _context.Patients.Find(id);
-
-        if (pt is null) return NotFound($"Patient with id {id} not found");
-        _context.Patients.Remove(pt);
-        _context.SaveChanges();
+        await _patientService.DeletePatient(id);
         return Ok("Patient removed successfully");
     }
 
@@ -111,23 +91,18 @@ public class PatientsController : ControllerBase
     /// <param name="id">Patient's id</param>
     /// <param name="pt">Patient object with changed data</param>
     /// <returns>Ok if patient edited successfully, BadRequest if something went wrong, NotFound if patient with specified id does not exist</returns>
-    [HttpPut("{id}")]
-    public async Task<IActionResult> SavePatientChanges(string id, [FromBody] Patient pt)
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> SavePatientChanges(int id, [FromBody] Patient pt)
     {
-        if (!id.Equals(pt.Pesel)) return BadRequest();
-        if (_context.Patients.Any(pat => pat.Pesel.Equals(id)))
+        if (id != pt.PatientId) return BadRequest();
+        try
         {
-            _context.Entry(pt).State = EntityState.Modified;
-            try
-            {
-                await _context.SaveChangesAsync();
-                return Ok();
-            }
-            catch (DBConcurrencyException)
-            {
-                return BadRequest();
-            }
+            await _patientService.UpdatePatient(id, pt);
+            return Ok();
         }
-        return NotFound("Patient with specified id not found");
+        catch (DBConcurrencyException)
+        {
+            return BadRequest();
+        }
     }
 }

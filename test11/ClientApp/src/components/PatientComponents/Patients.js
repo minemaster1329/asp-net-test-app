@@ -94,7 +94,7 @@ export default class Patients extends Component {
                 </thead>
                 <tbody>
                 {patients.map(patient => 
-                    <tr key={patient.pesel}>
+                    <tr key={patient.patientId}>
                         <td>{patient.pesel}</td>
                         <td>{patient.name}</td>
                         <td>{patient.surname}</td>

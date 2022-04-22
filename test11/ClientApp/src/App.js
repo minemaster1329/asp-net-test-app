@@ -10,6 +10,7 @@ import PatientDetails from "./components/PatientComponents/PatientDetails";
 import AddNewPatient from "./components/PatientComponents/AddNewPatient";
 import {Switch} from "react-router-dom";
 import EditPatientForm from "./components/PatientComponents/EditPatientForm";
+import DoctorsOverview from "./components/DoctorComponents/DoctorsOverview";
 
 export default class App extends Component {
   static displayName = App.name;
@@ -32,6 +33,7 @@ export default class App extends Component {
                       <Route component={NotFound}/>
                   </Switch>
               </Route>
+              <Route path='/doctors' component={DoctorsOverview}/>
               <Route path='/addnewpatient' component={AddNewPatient}/>
               <Route component={NotFound}/>
           </Switch>

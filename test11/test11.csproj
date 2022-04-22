@@ -34,7 +34,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="ClientApp\src\components\DoctorComponents" />
       <Folder Include="ClientApp\src\components\SpecializationComponents" />
       <Folder Include="ClientApp\src\components\VisitComponents" />
     </ItemGroup>

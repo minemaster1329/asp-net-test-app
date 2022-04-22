@@ -23,6 +23,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<IRepository<Patient>, PatientRepository>();
 builder.Services.AddScoped<IPatientService, PatientService>();
 
+builder.Services.AddScoped<IRepository<Doctor>, DoctorRepository>();
+builder.Services.AddScoped<IDoctorService, DoctorService>();
+
 //Adding CORS policy
 builder.Services.AddCors((options) =>
 {

@@ -13,4 +13,10 @@ public class ApplicationDbContext : DbContext
     /// Patients database set
     /// </summary>
     public DbSet<Patient> Patients { get; set; }
+    
+    public DbSet<Doctor> Doctor { get; set; }
+    
+    public DbSet<Visit> Visits { get; set; }
+    
+    public DbSet<Specialization> Specializations { get; set; }
 }

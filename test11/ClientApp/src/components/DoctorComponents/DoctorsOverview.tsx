@@ -1,5 +1,5 @@
 import React from "react";
-import {Doctor, Gender} from "./DoctorInterface";
+import {Doctor, Gender, Specialization} from "./DoctorInterface";
 
 interface State {
     doctors: Doctor[];
@@ -22,8 +22,8 @@ export default class DoctorsOverview extends React.Component<{}, State> {
         }
     }
     
-    componentDidMount() {
-        this.populateDoctorsData()
+    async componentDidMount() {
+        await this.populateDoctorsData()
     }
 
     render(){
@@ -48,19 +48,23 @@ export default class DoctorsOverview extends React.Component<{}, State> {
                     <th>Email</th>
                     <th>Gender</th>
                     <th>Phone</th>
+                    <th>Specialization</th>
                 </tr>
                 </thead>
                 <tbody>
-                {doctors.map(doctor => 
-                    <tr key={doctor.doctorId}>
-                        <td>{doctor.pesel}</td>
-                        <td>{doctor.name}</td>
-                        <td>{doctor.surname}</td>
-                        <td>{doctor.middleName}</td>
-                        <td>{doctor.email}</td>
-                        <td>{this.renderGender(doctor.gender)}</td>
-                        <td>{doctor.phone}</td>
-                    </tr>
+                {doctors.map(doctor => {
+                        console.log(doctor);
+                        return (<tr key={doctor.doctorId}>
+                            <td>{doctor.pesel}</td>
+                            <td>{doctor.name}</td>
+                            <td>{doctor.surname}</td>
+                            <td>{doctor.middleName}</td>
+                            <td>{doctor.email}</td>
+                            <td>{this.renderGender(doctor.gender)}</td>
+                            <td>{doctor.phone}</td>
+                            <td>{doctor.specialization.name}</td>
+                        </tr>)
+                    }
                 )}
                 </tbody>
             </table>
@@ -99,5 +103,12 @@ export default class DoctorsOverview extends React.Component<{}, State> {
                     error_message: ""
                 })
             })
+    }
+    
+    fetchDoctorsSpecialization(specId: number){
+        return fetch(`api/Specialization/GetSpecializationById/${specId}`.toLowerCase()).then(response => response.json()).then(json => {
+            let sp = json as Specialization;
+            return sp.name;
+        })
     }
 }

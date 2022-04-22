@@ -16,7 +16,7 @@ public class ApplicationDbContext : DbContext
     
     public DbSet<Doctor> Doctor { get; set; }
     
-    public DbSet<Visit> Visits { get; set; }
+    public DbSet<Visit> Visit { get; set; }
     
-    public DbSet<Specialization> Specializations { get; set; }
+    public DbSet<Specialization> Specialization { get; set; }
 }

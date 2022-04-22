@@ -11,7 +11,7 @@ public abstract class AbstractRepository<T> : IRepository<T> where T : class
         ApplicationDbContext = applicationDbContext;
     } 
 
-    public IQueryable<T> GetAll()
+    public virtual IQueryable<T> GetAll()
     {
         return ApplicationDbContext.Set<T>().AsNoTracking();
     }

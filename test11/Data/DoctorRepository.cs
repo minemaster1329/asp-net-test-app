@@ -13,4 +13,9 @@ public class DoctorRepository : AbstractRepository<Doctor>
     {
         return await ApplicationDbContext.Set<Doctor>().FirstOrDefaultAsync(d => d.DoctorId == id);
     }
+
+    public override IQueryable<Doctor> GetAll()
+    {
+        return ApplicationDbContext.Set<Doctor>().Include(x => x.Specialization).AsNoTracking();
+    }
 }

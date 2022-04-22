@@ -1,3 +1,9 @@
+export interface Specialization {
+    id: number;
+    name: string;
+    doctors: []
+}
+
 export enum Gender {
     Male,
     Female,
@@ -13,5 +19,9 @@ export interface Doctor {
     email: string;
     gender: Gender;
     phone: string;
-    specialization: number;
+    specialization: Specialization;
+}
+
+export interface DoctorWithSpecName {
+    
 }

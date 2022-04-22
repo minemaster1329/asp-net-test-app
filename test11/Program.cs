@@ -26,6 +26,9 @@ builder.Services.AddScoped<IPatientService, PatientService>();
 builder.Services.AddScoped<IRepository<Doctor>, DoctorRepository>();
 builder.Services.AddScoped<IDoctorService, DoctorService>();
 
+builder.Services.AddScoped<IRepository<Specialization>, SpecializationRepository>();
+builder.Services.AddScoped<ISpecializationService, SpecializationService>();
+
 //Adding CORS policy
 builder.Services.AddCors((options) =>
 {

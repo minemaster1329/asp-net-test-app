@@ -33,8 +33,6 @@ public class Patient
     [Required]
     public Gender Gender { get; set;}
 
-    public List<Visit> Visits { get; set; }
-
     public Patient(string pesel, string name, string surname, string middleName, string email, Gender gender)
     {
         Pesel = pesel;

@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 using test11.Models;
 using test11.Services;
+using test11.ViewModels;
 
 namespace test11.Controllers;
 
@@ -20,6 +22,9 @@ public class DoctorsController : ControllerBase
     {
         IList<Doctor> doctors = await _doctorService.GetAllDoctors();
 
+        //IList<DoctorViewModel> doctorViewModels = doctors.Select(doctor => new DoctorViewModel(doctor)).ToList();
+
+        //return Ok(doctorViewModels.ToArray());
         return Ok(doctors.ToArray());
     }
 }

@@ -18,13 +18,9 @@ public class DoctorsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllDoctors()
+    public async Task<IActionResult> GetAllDoctorsWithSpecialization()
     {
-        IList<Doctor> doctors = await _doctorService.GetAllDoctors();
-
-        //IList<DoctorViewModel> doctorViewModels = doctors.Select(doctor => new DoctorViewModel(doctor)).ToList();
-
-        //return Ok(doctorViewModels.ToArray());
+        IList<Doctor> doctors = await _doctorService.GetAllDoctorsWithSpecialization();
         return Ok(doctors.ToArray());
     }
 }

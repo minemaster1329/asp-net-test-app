@@ -13,7 +13,7 @@ public class DoctorService : IDoctorService
         _doctorsRepository = doctorsRepository;
     }
 
-    public async Task<IList<Doctor>> GetAllDoctors()
+    public async Task<IList<Doctor>> GetAllDoctorsWithSpecialization()
     {
         return await _doctorsRepository.GetAll().ToListAsync();
     }

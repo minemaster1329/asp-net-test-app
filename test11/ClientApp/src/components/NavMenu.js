@@ -1,5 +1,15 @@
 import React, { Component } from 'react';
-import {Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink} from 'reactstrap';
+import {
+  Collapse,
+  Container, DropdownItem, DropdownMenu, DropdownToggle,
+  Nav,
+  Navbar,
+  NavbarBrand,
+  NavbarToggler,
+  NavItem,
+  NavLink,
+  UncontrolledDropdown
+} from 'reactstrap';
 import { Link } from 'react-router-dom';
 import './NavMenu.css';
 
@@ -8,14 +18,13 @@ export class NavMenu extends Component {
 
   constructor (props) {
     super(props);
-
-    this.toggleNavbar = this.toggleNavbar.bind(this);
+    
     this.state = {
       collapsed: true
     };
   }
 
-  toggleNavbar () {
+  toggleNavbar =  () =>  {
     this.setState({
       collapsed: !this.state.collapsed
     });
@@ -29,17 +38,40 @@ export class NavMenu extends Component {
             <NavbarBrand tag={Link} to="/">Patient's registration sytem</NavbarBrand>
             <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
             <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!this.state.collapsed} navbar>
-              <ul className="navbar-nav flex-grow">
+              <Nav navbar>
                 <NavItem>
                   <NavLink tag={Link} className="text-dark" to="/">Home</NavLink>
                 </NavItem>
-                <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/patients">Patients</NavLink>
-                </NavItem>
+                <UncontrolledDropdown nav inNavbar>
+                  <DropdownToggle nav caret className="text-dark">
+                    Patients
+                  </DropdownToggle>
+                  <DropdownMenu right>
+                    <DropdownItem tag={Link} to="/patients" className="text-dark">
+                      Overview
+                    </DropdownItem>
+                    <DropdownItem tag={Link} to="/addnewpatient" className="text-dark">
+                      Add new patient
+                    </DropdownItem>
+                  </DropdownMenu>
+                </UncontrolledDropdown>
+                <UncontrolledDropdown nav inNavbar>
+                  <DropdownToggle nav caret className="text-dark">
+                    Doctors
+                  </DropdownToggle>
+                  <DropdownMenu right>
+                    <DropdownItem tag={Link} to="/doctor/overview" className="text-dark">
+                      Overview
+                    </DropdownItem>
+                    <DropdownItem tag={Link} to="/doctor/addnew" className="text-dark">
+                      Add new doctor
+                    </DropdownItem>
+                  </DropdownMenu>
+                </UncontrolledDropdown>
                 <NavItem>
                   <NavLink tag={Link} className="text-dark" to="/doctors">Doctors</NavLink>
                 </NavItem>
-              </ul>
+              </Nav>
             </Collapse>
           </Container>
         </Navbar>

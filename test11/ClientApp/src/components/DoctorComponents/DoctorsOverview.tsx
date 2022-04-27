@@ -80,7 +80,7 @@ export default class DoctorsOverview extends React.Component<{}, State> {
     }
     
     async populateDoctorsData(){
-        await fetch('api/Doctors/GetAllDoctors'.toLowerCase()).then((response) => {
+        await fetch('api/Doctors/GetAllDoctorsWithSpecialization'.toLowerCase()).then((response) => {
             if (response.ok){
                 return response.json();
             }
@@ -103,12 +103,5 @@ export default class DoctorsOverview extends React.Component<{}, State> {
                     error_message: ""
                 })
             })
-    }
-    
-    fetchDoctorsSpecialization(specId: number){
-        return fetch(`api/Specialization/GetSpecializationById/${specId}`.toLowerCase()).then(response => response.json()).then(json => {
-            let sp = json as Specialization;
-            return sp.name;
-        })
     }
 }

@@ -4,5 +4,5 @@ namespace test11.Services;
 
 public interface IDoctorService
 {
-    public Task<IList<Doctor>> GetAllDoctors();
+    public Task<IList<Doctor>> GetAllDoctorsWithSpecialization();
 }

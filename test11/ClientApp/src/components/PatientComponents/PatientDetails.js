@@ -76,7 +76,10 @@ export default class PatientDetails extends Component {
     async fetchPatient(){
         //extract patient's pesel number from search string
         let id = qs.parse(this.props.location.search, {ignoreQueryPrefix: true}).id;
-        
+        if (id === undefined){
+            this.props.history.push('/notfound')
+            return;
+        }
         //fetch patient from server
         await fetch(`api/Patients/GetPatientById/${id}`).then((response) => {
             //check if server returned OK

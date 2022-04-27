@@ -3,8 +3,7 @@ import qs from "qs";
 import {Link} from "react-router-dom";
 import './patientsStyles.css'
 import {Button, Form, FormFeedback, FormGroup, Input, Label} from "reactstrap";
-const patternNames = /^[A-z][a-z]+$/
-const patternEmail = /(^$)|(^[A-Z0-9a-z]+@[A-Za-z0-9]+\.[A-Za-z]{2,64}$)/;
+import {patternNames, patternEmail} from "../FieldValidationStuff"
 
 export default class EditPatientForm extends React.Component {
     /** function for validating form fields */
@@ -74,9 +73,6 @@ export default class EditPatientForm extends React.Component {
             }
         }));
         
-        console.log(this.state.patient);
-        console.log(this.state.patient_prev);
-        
         //check if patient was edited or not
         this.setState(prevState => ({
             ...prevState,
@@ -129,7 +125,8 @@ export default class EditPatientForm extends React.Component {
                         alert("Patient saved successfully");
                         this.setState(prevState => ({
                             ...prevState,
-                            patient_prev: prevState.patient
+                            patient_prev: prevState.patient,
+                            patient_changed: false
                         }))
                     }
 
@@ -165,7 +162,7 @@ export default class EditPatientForm extends React.Component {
                             value={this.state.patient.name}
                             onChange={this.handleFormFieldChange}
                         />
-                        <FormFeedback>Invalid email format</FormFeedback>
+                        <FormFeedback>Invalid name</FormFeedback>
                     </FormGroup>
                     <FormGroup>
                         <Label for="patientSurname" >Surname</Label>
@@ -178,7 +175,7 @@ export default class EditPatientForm extends React.Component {
                             value={this.state.patient.surname}
                             onChange={this.handleFormFieldChange}
                         />
-                        <FormFeedback>Invalid email format</FormFeedback>
+                        <FormFeedback>Invalid surname</FormFeedback>
                     </FormGroup>
                     <FormGroup>
                         <Label for="patientMiddleName" >Middle Name</Label>
@@ -191,7 +188,7 @@ export default class EditPatientForm extends React.Component {
                             value={this.state.patient.middleName}
                             onChange={this.handleFormFieldChange}
                         />
-                        <FormFeedback>Invalid email format</FormFeedback>
+                        <FormFeedback>Invalid middle name</FormFeedback>
                     </FormGroup>
                     <FormGroup>
                         <Label for="patientEmail" >Email</Label>

@@ -8,4 +8,6 @@ public class Specialization
     public int SpecializationId { get; set; }
     [Required]
     public string Name { get; set; }
+    
+    public virtual ICollection<Doctor> Doctors { get; set; }
 }

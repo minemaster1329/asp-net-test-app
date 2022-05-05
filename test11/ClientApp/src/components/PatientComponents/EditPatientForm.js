@@ -3,7 +3,7 @@ import qs from "qs";
 import {Link} from "react-router-dom";
 import './patientsStyles.css'
 import {Button, Form, FormFeedback, FormGroup, Input, Label} from "reactstrap";
-import {patternNames, patternEmail} from "../FieldValidationStuff"
+import {patternNames, patternEmail} from "../../pubstuff/FieldValidationStuff"
 
 export default class EditPatientForm extends React.Component {
     /** function for validating form fields */

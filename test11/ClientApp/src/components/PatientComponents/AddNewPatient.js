@@ -2,7 +2,7 @@
 
 import './patientsStyles.css'
 import {Link} from "react-router-dom";
-import {validatePatientPesel, patternNames, patternEmail} from "../FieldValidationStuff"
+import {validatePatientPesel, patternNames, patternEmail} from "../../pubstuff/FieldValidationStuff"
 
 export default class AddNewPatient extends Component{
     constructor(props){

@@ -1,7 +1,7 @@
 import React, {FormEvent, MouseEvent as ReactMouseEvent, MouseEventHandler, useEffect, useState} from "react";
 import {Gender} from "./DoctorInterface";
 import {Button, Form, FormFeedback, FormGroup, Input, Label} from "reactstrap";
-import {patternEmail, patternNames, patternPhone, validatePatientPesel} from "../FieldValidationStuff"
+import {patternEmail, patternNames, patternPhone, validatePatientPesel} from "../../pubstuff/FieldValidationStuff"
 import {Link} from "react-router-dom";
 
 export default function DoctorAddNew() {
@@ -109,6 +109,18 @@ export default function DoctorAddNew() {
                 </FormGroup>
                 <FormGroup className="m-1">
                     <Label for='doctorEmail'>Email</Label>
+                    <Input
+                        type="email"
+                        name="email"
+                        id="doctorEmail"
+                        value={email}
+                        onChange={e => setEmail(e.target.value)}
+                        invalid={!emailValid}
+                        valid={emailValid}
+                    />
+                </FormGroup>
+                <FormGroup className="m-1">
+                    <Label for='doctorPhone'>Email</Label>
                     <Input
                         type="email"
                         name="email"

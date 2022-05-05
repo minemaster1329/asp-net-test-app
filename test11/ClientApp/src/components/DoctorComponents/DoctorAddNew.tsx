@@ -37,7 +37,7 @@ export default function DoctorAddNew() {
     const [phone, setPhone] = useState("");
     useEffect(()=> {
         setPhoneValid(/^$/.test(phone) || patternPhone.test(phone))
-    }, [phone]);
+    }, [phoneValid]);
     
     const handleSubmit = (evt : ReactMouseEvent<HTMLButtonElement, MouseEvent>) => {
         evt.preventDefault();

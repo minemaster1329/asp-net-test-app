@@ -21,3 +21,7 @@ export function validatePatientPesel(pesel){
     }
     else return false;
 }
+
+export function validateName(input, canBeEmpty = false){
+    return (canBeEmpty || /^$/.test(input)) || patternNames.test(input);
+}

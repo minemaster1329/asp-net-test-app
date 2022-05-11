@@ -23,6 +23,7 @@ export default class PatientDetails extends Component {
                 <p>Middlename: {patient.middlename}</p>
                 <p>Gender: {this.renderGender(patient.gender)}</p>
                 <p>Email: {patient.email}</p>
+                <p>Phone: {patient.phone}</p>
             </div>
         )
     }

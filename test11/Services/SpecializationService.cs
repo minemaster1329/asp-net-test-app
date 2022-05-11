@@ -22,4 +22,9 @@ public class SpecializationService : ISpecializationService
     {
         return await _specializationRepository.GetByIdAsync(id);
     }
+
+    public async Task AddNewSpecialization(Specialization spec)
+    {
+        await _specializationRepository.AddAsync(spec);
+    }
 }

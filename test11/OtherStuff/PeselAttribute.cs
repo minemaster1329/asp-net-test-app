@@ -10,7 +10,7 @@ public class PeselAttribute : ValidationAttribute
     
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
-        var patient = (Patient) validationContext.ObjectInstance;
+        var patient = (PersonAbstract) validationContext.ObjectInstance;
 
         if (CheckPeselFormat(patient.Pesel) && CheckPeselChecksum(patient.Pesel)) return ValidationResult.Success;
         else return new ValidationResult(_errorCode);

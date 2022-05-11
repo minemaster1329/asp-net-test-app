@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using test11.Models;
 using test11.Services;
@@ -23,5 +25,21 @@ public class SpecializationController : ControllerBase
 
         if (specialization is null) return NotFound();
         return Ok(specialization);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAllSpecializations()
+    {
+        IList<Specialization> specializations = await _specializationService.GetAllSpecializations();
+
+        return Ok(specializations);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> AddNewSpecialization([FromBody] Specialization specialization)
+    {
+        await _specializationService.AddNewSpecialization(specialization);
+        Debug.Write(specialization.SpecializationId);
+        return Ok();
     }
 }

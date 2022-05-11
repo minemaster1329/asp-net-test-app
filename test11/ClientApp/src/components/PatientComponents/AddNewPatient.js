@@ -2,7 +2,7 @@
 
 import './patientsStyles.css'
 import {Link} from "react-router-dom";
-import {validatePatientPesel, patternNames, patternEmail} from "../../pubstuff/FieldValidationStuff"
+import {validatePatientPesel, patternNames, patternEmail, patternPhone} from "../../pubstuff/FieldValidationStuff"
 
 export default class AddNewPatient extends Component{
     constructor(props){
@@ -15,11 +15,13 @@ export default class AddNewPatient extends Component{
             newPatientMiddlename: "",
             newPatientGender: 0,
             newPatientEmail: "",
+            newPatientPhone: "",
             newPatientPeselValid: false,
             newPatientNameValid: false,
             newPatientSurnameValid: false,
             newPatientMiddlenameValid: true,
             newPatientEmailValid: true,
+            newPatientPhoneValid: true,
         };
     }
     
@@ -33,7 +35,8 @@ export default class AddNewPatient extends Component{
             this.state.newPatientSurnameValid &&
             this.state.newPatientMiddlenameValid &&
             this.state.newPatientPeselValid &&
-            this.state.newPatientEmailValid
+            this.state.newPatientEmailValid &&
+            this.state.newPatientPhoneValid
         ) {
             //create new patient object to be send to server
             let newPatient = {
@@ -43,6 +46,7 @@ export default class AddNewPatient extends Component{
                 MiddleName: this.state.newPatientMiddlename,
                 Email: this.state.newPatientEmail,
                 Gender: parseInt(this.state.newPatientGender),
+                Phone: this.state.newPatientPhone,
                 Visits: []
             }
             
@@ -65,11 +69,13 @@ export default class AddNewPatient extends Component{
                         newPatientMiddlename: "",
                         newPatientGender: 0,
                         newPatientEmail: "",
+                        newPatientPhone: "",
                         newPatientPeselValid: false,
                         newPatientNameValid: false,
                         newPatientSurnameValid: false,
                         newPatientMiddlenameValid: true,
                         newPatientEmailValid: true,
+                        newPatientPhoneValid: "",
                     })
                 }
                 else {
@@ -101,11 +107,13 @@ export default class AddNewPatient extends Component{
             newPatientMiddlename: "",
             newPatientGender: 0,
             newPatientEmail: "",
+            newPatientPhone: "",
             newPatientPeselValid: false,
             newPatientNameValid: false,
             newPatientSurnameValid: false,
             newPatientMiddlenameValid: true,
             newPatientEmailValid: true,
+            newPatientPhoneValid: true,
         });
     }
     
@@ -137,8 +145,10 @@ export default class AddNewPatient extends Component{
                 field_valid = /^$/.test(fieldValue) || patternNames.test(fieldValue)
                 break;
             case 'newPatientEmail':
-                field_valid = patternEmail.test(fieldValue);
+                field_valid = /^$/.test(fieldValue) || patternEmail.test(fieldValue);
                 break;
+            case 'newPatientPhone':
+                field_valid = /^$/.test(fieldValue) || patternPhone.test(fieldValue)
         }
         
         //change validity state of specified field
@@ -206,6 +216,17 @@ export default class AddNewPatient extends Component{
                             <td>
                                 <p className={this.state.newPatientEmailValid ? 'text-valid-input' : 'text-invalid-input'}>
                                     {this.state.newPatientEmailValid ? 'Valid' : 'Invalid'}
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Patient's phone:</td>
+                            <td>
+                                <input type='text' name='newPatientPhone' maxLength='50'  value={this.state.newPatientPhone} onChange={this.handleChangeEvent}/>
+                            </td>
+                            <td>
+                                <p className={this.state.newPatientPhoneValid ? 'text-valid-input' : 'text-invalid-input'}>
+                                    {this.state.newPatientPhoneValid ? 'Valid' : 'Invalid'}
                                 </p>
                             </td>
                         </tr>

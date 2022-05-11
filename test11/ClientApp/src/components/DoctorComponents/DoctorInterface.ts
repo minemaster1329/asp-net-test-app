@@ -1,5 +1,5 @@
 export interface Specialization {
-    id: number;
+    specializationId: number;
     name: string;
     doctors: []
 }
@@ -10,7 +10,7 @@ export enum Gender {
     Other
 }
 
-export interface Doctor {
+export type Doctor = {
     doctorId: number;
     pesel: string;
     name: string;
@@ -22,6 +22,24 @@ export interface Doctor {
     specialization: Specialization;
 }
 
-export interface DoctorWithSpecName {
-    
+export type NewDoctor = {
+    pesel: string;
+    name: string;
+    surname: string;
+    middleName: string;
+    email: string;
+    gender: number;
+    phone: string;
+    specializationId: number;
+}
+
+export interface NewDoctorWithSpecName {
+    pesel: string;
+    name: string;
+    surname: string;
+    middleName: string;
+    email: string;
+    gender: number;
+    phone: string;
+    specializationName: string;
 }

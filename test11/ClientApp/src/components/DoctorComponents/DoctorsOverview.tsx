@@ -1,5 +1,5 @@
 import React from "react";
-import {Doctor, Gender, Specialization} from "./DoctorInterface";
+import {Doctor, Gender} from "./DoctorInterface";
 
 interface State {
     doctors: Doctor[];
@@ -53,7 +53,6 @@ export default class DoctorsOverview extends React.Component<{}, State> {
                 </thead>
                 <tbody>
                 {doctors.map(doctor => {
-                        console.log(doctor);
                         return (<tr key={doctor.doctorId}>
                             <td>{doctor.pesel}</td>
                             <td>{doctor.name}</td>
@@ -102,6 +101,17 @@ export default class DoctorsOverview extends React.Component<{}, State> {
                     error_code: 0,
                     error_message: ""
                 })
+            })
+            .catch(reason => {
+                if (reason instanceof String){
+                    this.setState({
+                        doctors: [],
+                        loading: false,
+                        error_when_fetching: true,
+                        error_code: 0,
+                        error_message: String(reason)
+                    })
+                }
             })
     }
 }

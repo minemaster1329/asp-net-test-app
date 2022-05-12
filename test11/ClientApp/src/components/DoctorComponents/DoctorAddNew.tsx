@@ -14,24 +14,7 @@ export default function DoctorAddNew() {
     
     const [avaibleSpecializations, setAvailableSpecializations] = useState<Specialization[]>([])
     useEffect(() => {
-        const fetchData = async () => {
-            await fetch('api/Specialization/GetAllSpecializations'.toLowerCase()).then(response => {
-                if (response.ok){
-                    return response.json();
-                }
-                
-                alert(`Code: ${response.status}; Cause: ${response.statusText}`);
-                throw new Error("Error when fetching data");
-            }).then(responseJson => {
-                setAvailableSpecializations(responseJson);
-            }).catch(reason => {
-                if (reason instanceof String){
-                    alert(`Something went wrong when fetching data ${reason}`);
-                }
-            })
-        }
-        
-        fetchData();
+        fetchSpecializations();
     }, [])
     
     //NEW DOCTOR DATA
@@ -67,7 +50,9 @@ export default function DoctorAddNew() {
     const handleSubmit = async (evt : ReactMouseEvent<HTMLButtonElement, MouseEvent>) => {
         evt.preventDefault();
         if (peselValid && nameValid && surnameValid && middleNameValid && emailValid && phoneValid && (specializationId !== -2) && (((specializationId === -1) && newSpecializationName !== "") || specializationId > 0)) {
-            alert(`Submitting doctor with Pesel: ${pesel}`);
+            if (await fetch(`/api/Doctors/CheckIfDoctorWithSpecifiedPeselExists/${pesel}`).then(response => response.json()).then(responseJson => responseJson)) {
+                alert("Doctor with specified Pesel already exists in system");
+            }
             if (specializationId === -1){
                 let newDoctor: NewDoctorWithSpecName = {
                     pesel: pesel,
@@ -95,6 +80,7 @@ export default function DoctorAddNew() {
                         });
                     }
                 })
+                await fetchSpecializations();
             }
             else {
                 let newDoctor: NewDoctor = {
@@ -125,6 +111,8 @@ export default function DoctorAddNew() {
                     }
                 })
             }
+            
+            resetForm();
         }
         else {
             alert("Some fields have invalid values.");
@@ -133,6 +121,27 @@ export default function DoctorAddNew() {
     
     const handleReset = (evt : ReactMouseEvent<HTMLButtonElement, MouseEvent>) => {
         evt.preventDefault();
+        resetForm();
+    }
+    
+    const fetchSpecializations = async () => {
+        await fetch('api/Specialization/GetAllSpecializations'.toLowerCase()).then(response => {
+            if (response.ok){
+                return response.json();
+            }
+
+            alert(`Code: ${response.status}; Cause: ${response.statusText}`);
+            throw new Error("Error when fetching data");
+        }).then(responseJson => {
+            setAvailableSpecializations(responseJson);
+        }).catch(reason => {
+            if (reason instanceof String){
+                alert(`Something went wrong when fetching data ${reason}`);
+            }
+        })
+    }
+    
+    const resetForm = () => {
         setPesel("");
         setName("");
         setSurname("");

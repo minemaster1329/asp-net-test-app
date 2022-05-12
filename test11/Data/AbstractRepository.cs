@@ -18,13 +18,13 @@ public abstract class AbstractRepository<T> : IRepository<T> where T : class
 
     public abstract Task<T?> GetByIdAsync(int id);
 
-    public async Task AddAsync(T entity)
+    public virtual async Task AddAsync(T entity)
     {
         await ApplicationDbContext.Set<T>().AddAsync(entity);
         await ApplicationDbContext.SaveChangesAsync();
     }
 
-    public async Task UpdateAsync(T entity)
+    public virtual async Task UpdateAsync(T entity)
     {
         ApplicationDbContext.Set<T>().Update(entity);
         await ApplicationDbContext.SaveChangesAsync();

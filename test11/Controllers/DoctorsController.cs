@@ -63,4 +63,10 @@ public class DoctorsController : ControllerBase
 
         return Ok();
     }
+
+    [HttpGet]
+    public async Task<bool> CheckIfDoctorWithSpecifiedPeselExists(string pesel)
+    {
+        return await _doctorService.CheckIfDoctorWithSpecifiedPeselExists(pesel);
+    }
 }

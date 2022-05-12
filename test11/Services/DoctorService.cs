@@ -42,8 +42,8 @@ public class DoctorService : IDoctorService
 
     public async Task AddNewDoctorWithSpecializationName(NewDoctorWithSpecializationName newDoctorWithSpecializationName)
     {
-        if (_specializationRepository.GetAll()
-            .Any(spec => spec.Name.Equals(newDoctorWithSpecializationName.SpecializationName)))
+        if (await _specializationRepository.GetAll()
+                .AnyAsync(spec => spec.Name.Equals(newDoctorWithSpecializationName.SpecializationName)))
             throw new SpecializationAlreadyExistsException();
         Specialization specialization = new Specialization() {Name = newDoctorWithSpecializationName.SpecializationName};
         await _specializationRepository.AddAsync(specialization);
@@ -59,5 +59,10 @@ public class DoctorService : IDoctorService
             Phone = newDoctorWithSpecializationName.Phone
         };
         await _doctorsRepository.AddAsync(doctor);
+    }
+
+    public async Task<bool> CheckIfDoctorWithSpecifiedPeselExists(string pesel)
+    {
+        return await _doctorsRepository.GetAll().AnyAsync(doctor => doctor.Pesel.Equals(pesel));
     }
 }

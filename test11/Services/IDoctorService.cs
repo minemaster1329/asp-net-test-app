@@ -11,4 +11,6 @@ public interface IDoctorService
 
     public Task AddNewDoctorWithSpecializationName(
         NewDoctorWithSpecializationName newDoctorWithSpecializationName);
+
+    public Task<bool> CheckIfDoctorWithSpecifiedPeselExists(string pesel);
 }
